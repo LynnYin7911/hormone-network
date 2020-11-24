@@ -1,2 +1,2 @@
 # hormone-network
-all the codes used in TFs-SDREM paper
+All the codes used in TFs-SDREM paper
