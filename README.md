@@ -18,3 +18,7 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 All the raw data (clean data) and processed data (count/TPM matrix.csv) has been uploaded to GEO with accession number: GSE182617
 - Analysis pipeline
 1. All analysis processes can be found in
+## ChIP-seq data
+## Hub target genes identification
+## RNA-seq data for validation experiment
+## Proteomics and Phosphoproteomics for validation experiment
