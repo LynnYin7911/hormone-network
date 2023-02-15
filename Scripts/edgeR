@@ -7,13 +7,17 @@ library(dplyr)
 ##Set work directory
 setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_AgriBio_labwork/00_Salmon_DEG_rmBatch/Salmon_countHPC")
 
-##Summarize the count and TPM results for all biological samples
+##Read in the sample names list
 ja_sample_list <- read.table('./1_JA/sample_list.txt')
 names(ja_sample_list) <- 'ja_sample_name'
 ja_count_files <- file.path("./1_JA/",
                             paste0(ja_sample_list$ja_sample_name,'_quant'), 'quant.sf')
 names(ja_count_files) <- ja_sample_list$ja_sample_name
+
+##Test the complete of all sample results
 all(file.exists(ja_count_files))
+
+##Summarize the count and TPM results for all biological samples
 ja_txi <- tximport(ja_count_files, type = 'salmon',txOut = TRUE)
 ja_count_matrix <- as.data.frame(ja_txi$counts)
 ja_TPM_matrix <- as.data.frame(ja_txi$abundance)
@@ -36,7 +40,6 @@ ja_count_matrix <- as.data.frame(ja_count_files)
 ##Set sample groups 
 ja_groups <- factor(c(rep("JA_0h",3),rep("JA_0.25h",3),rep("JA_0.5h",3),rep("JA_1h",3),
                       rep("JA_2h",3),rep("JA_4h",3),rep("JA_8h",3),rep("JA_12h",3),rep("JA_24h",3)))
-
 ja_groups <-relevel(ja_groups,ref = "JA_0h")
 View(ja_groups)
 
@@ -48,7 +51,7 @@ ja_genelist$samples
 Batch <- factor(rep(c("rep1","rep2","rep3"),9))
 View(Batch)
 
-##Filter out LOW expression genes
+##Filter out low expression genes by using the function in edgeR
 ja_keep <-filterByExpr(ja_genelist, group = ja_groups)
 table(ja_keep)
 ja_genelist_filted <- ja_genelist[ja_keep,, keep.lib.sizes=FALSE]
@@ -126,18 +129,17 @@ top_test <-rownames(topTags(ja_qlf))
 cpm(ja_genelist_Disp)[top_test,]
 ##It shows that the batch effect has been corrected
 
-###Check the sample cluster after remove batch effect
+##Check the sample cluster after remove batch effect
 logcpm_before <-cpm(ja_genelist_norm,log = TRUE)
 logcpm_after <- cpm(ja_genelist_Disp,log = TRUE)
 View(logcpm_before)
-
+##Draw heatmaps
 library(pheatmap)
 pheatmap(logcpm_before[1:2000, ],color = colorRampPalette(c("steelblue","white","darkorange2"))(100),
          cluster_rows = T, cluster_cols = T, scale = 'row',
          border_color = NA, legend = T,legend_breaks = -6:6,
          cellwidth = 12, cellheight = 0.2, fontsize_row = 12,fontsize_col = 12,
          main = "JA_samples",fontsize = 12,show_rownames = F)
-
 pheatmap(logcpm_after[1:5000, ],color = colorRampPalette(c("steelblue","white","darkorange2"))(100),
          cluster_rows = T, cluster_cols = T, scale = 'row',
          border_color = NA, legend = T,legend_breaks = -6:6,
@@ -256,26 +258,26 @@ ja8_v1 <- ja8DEG[rownames(ja8DEG)[order(rownames(ja8DEG),decreasing = F)],]
 ja12_v1 <- ja12DEG[rownames(ja12DEG)[order(rownames(ja12DEG),decreasing = F)],]
 ja24_v1 <- ja24DEG[rownames(ja24DEG)[order(rownames(ja24DEG),decreasing = F)],]
 
+##combine the values of all time points into one file
 JA_DEG_matrix <- cbind(ja0.25_v1,ja0.5_v1,ja1_v1,ja2_v1,ja4_v1,ja8_v1,ja12_v1,ja24_v1)
 JA_DEG_matrix <-JA_DEG_matrix[ ,c(1,6,11,16,21,26,31,36)]
 colnames(JA_DEG_matrix) <- c("0.25h","0.5h",'1h','2h','4h','8h','12h','24h')
+
+##Write out the file to become one of inputs for running SDREM
 write.csv(JA_DEG_matrix,"./03_Log2FC_matrix_forSDREM/JA_DEG_matrix.csv",quote = F)
 
-
-##Extract the TPM values of DEGs for clust
-###Import read counts
+##Extract the TPM values of DEGs for clust analysis
 setwd("C:/Users/19147668/OneDrive - LA TROBE UNIVERSITY/00_AgriBio_labwork/00_Salmon_DEG_rmBatch/01_JA_rmBatch")
-
 JA_TPM_files <- read.csv('./01JA_processed_data/ja_TPM_matrix_from_salmon.csv',
                          header = TRUE,stringsAsFactors = F)
                          
-###Import the ID list of DEGs
+##Import the ID list of DEGs
 JA_DEG_ID <-read.csv("./05_DEG_ID_for_clust/JA_DEG_ID_FDR0.01.csv",header = FALSE,stringsAsFactors = F)
 
-###Extract the TPM values of only DEGs
+##Extract the TPM values of only DEGs
 JA_DEG_TPM <- merge(JA_TPM_files,JA_DEG_ID,by.x = 'X',by.y = 'V1')
 
-###Re name the column name 
+##Re name the column name 
 names(JA_DEG_TPM) <- c('GeneID','0h_rep1','0h_rep2','0h_rep3','0.25h_rep1','0.25h_rep2','0.25h_rep3',
                         '0.5h_rep1','0.5h_rep2','0.5h_rep3','1h_rep1','1h_rep2','1h_rep3',
                         '2h_rep1','2h_rep2','2h_rep3','4h_rep1','4h_rep2','4h_rep3','8h_rep1','8h_rep2','8h_rep3',
