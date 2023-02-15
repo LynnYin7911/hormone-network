@@ -15,7 +15,7 @@ The workflow and all the codes used for 'Transcription factor activity in cross-
 ## Tools used
 List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V1.3.1, PhantomPeakQualTools v.2.0, MACS V2.1.0, JBrowse, bedtools V2.26.0, ChIPpeakAnno, HiSat2 V2.0.5, Htseq V0.8.0, Salmon v0.8.1, edgeR 3.28.1, Signalling and dynamic regulatory events modelling (SDREM), ClueGO v2.5.7 in Cytoscape v3.8.0, 3D RNA-seq tools, TSIS R package
 ## Data identifier, analysis pipeline and original code
-##- The identifier of newly generated data in this study
+- The identifier of newly generated data in this study
 1. Time series RNA-seq data: All the raw data (clean data) and processed data (count/TPM matrix.csv for RNA-seq data) have been uploaded to GEO with accession number: GSE182617 
 2. Hormone-responsive ChIP-seq data and validation RNA-seq data: All the raw data (clean data) and processed data (count/TPM matrix.csv for RNA-seq data; .narrowPeak for ChIP-seq data) have been uploaded to GEO with accession number: GSE220957
 3. Proteomics and Phosphoproteomics data: The mass spectrometry proteomics data (raw and search files) have been deposited to the ProteomeXchange Consortium via the PRIDE partner repository with the dataset identifier: PXD039958
@@ -23,7 +23,7 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 1. The summary of all analysis processes can be found in workflow_Hormone_network.pptx
 - Original code
 1. Differentially expressed genes analysis via edgeR
-2. Peak annotations via 
+2. Peak annotations via ChIPpeakAnno
 3. Input files for running SDREM (gene expression matrix; TF-target interactions; protein-protein interactions) preparation
 4. TF family distribution and enrichment analysis
 5. Hub target genes identification and expression distribution plot generation
