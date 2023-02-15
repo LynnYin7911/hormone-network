@@ -28,6 +28,6 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 4. TF family distribution and enrichment analysis
 5. Hub target genes identification and expression distribution plot generation
 6. Gene Ontology enrichment analysis
-7. Differentially alternative spliced (DAS) genes and DEGs start time clarification
+7. Differentially alternative spliced (DAS) genes and DEGs start time clarification (Scripts: Calculate_DAS_first_appear)
 8. Differentially abundant proteins and phosphopeptides analysis
 
