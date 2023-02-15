@@ -1,0 +1,57 @@
+#This script is written for detect the number of DAS genes and DEGs which are first appear at which time point (take the hormone:ABA dataset as example).
+##DAS genes first appear time
+###Set the working directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_3D_RNASeq_test/0_compare_DEG and DAS")
+###Read in hormone time point DAS genes ID - T1:1H;T2:4H; T3:8H; T4:12H; T5:24H; T6:36H; T7:60H
+aba_das <- read.csv('./01_DEG_DAS_firstappear_number/ABA_DAS_Timepoint.csv')
+###Check at which timepoint each DAS genes first appear
+T1 <- length(intersect(aba_das$X1h,aba_das$all))
+ALL_T1 <-setdiff(aba_das$all,aba_das$X1h)
+ALL_T2 <-setdiff(ALL_T1,aba_das$X4h)
+ALL_T3 <-setdiff(ALL_T2,aba_das$X8h)
+ALL_T4 <-setdiff(ALL_T3,aba_das$X12h)
+ALL_T5 <-setdiff(ALL_T4,aba_das$X24h)
+ALL_T6 <-setdiff(ALL_T5,aba_das$X36h)
+T2_list <- as.data.frame(intersect(aba_das$X4h,ALL_T1))
+T3_list <- as.data.frame(intersect(aba_das$X8h,ALL_T2))
+T4_list <- as.data.frame(intersect(aba_das$X12h,ALL_T3))
+T5_list <- as.data.frame(intersect(aba_das$X24h,ALL_T4))
+T6_list <- as.data.frame(intersect(aba_das$X36h,ALL_T5))
+T7_list <- as.data.frame(intersect(aba_das$X60h,ALL_T6))
+
+###Write out the DAS genes IDs at each time point
+write.csv(T2_list,file = './ABA_DAS_4.csv')
+write.csv(T3_list,file = './ABA_DAS_8.csv')
+write.csv(T4_list,file = './ABA_DAS_12.csv')
+write.csv(T5_list,file = './ABA_DAS_24.csv')
+write.csv(T6_list,file = './ABA_DAS_36.csv')
+write.csv(T7_list,file = './ABA_DAS_60.csv')
+
+##DEGs first appear time
+###Set the working directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_3D_RNASeq_test/0_compare_DEG and DAS/01_DEG_DAS_firstappear_number")
+###Read in hormone time point DEGs ID - T1:1H;T2:4H; T3:8H; T4:12H; T5:24H; T6:36H; T7:60H
+aba_deg <- read.csv('./ABA_FDR0.05_NOBatch_DEGs_timepoint.csv')
+
+###Check at which timepoint each DEGs first appear
+T1 <- length(intersect(aba_deg$X1h,aba_deg$all))
+ALL_T1 <-setdiff(aba_deg$all,aba_deg$X1h)
+ALL_T2 <-setdiff(ALL_T1,aba_deg$X4h)
+ALL_T3 <-setdiff(ALL_T2,aba_deg$X8h)
+ALL_T4 <-setdiff(ALL_T3,aba_deg$X12h)
+ALL_T5 <-setdiff(ALL_T4,aba_deg$X24h)
+ALL_T6 <-setdiff(ALL_T5,aba_deg$X36h)
+T2_list <- as.data.frame(intersect(aba_deg$X4h,ALL_T1))
+T3_list <- as.data.frame(intersect(aba_deg$X8h,ALL_T2))
+T4_list <- as.data.frame(intersect(aba_deg$X12h,ALL_T3))
+T5_list <- as.data.frame(intersect(aba_deg$X24h,ALL_T4))
+T6_list <- as.data.frame(intersect(aba_deg$X36h,ALL_T5))
+T7_list <- as.data.frame(intersect(aba_deg$X60h,ALL_T6))
+
+###Write out the DEGs IDs at each time point
+write.csv(T2_list,file = './ABA_DEG_4.csv')
+write.csv(T3_list,file = './ABA_DEG_8.csv')
+write.csv(T4_list,file = './ABA_DEG_12.csv')
+write.csv(T5_list,file = './ABA_DEG_24.csv')
+write.csv(T6_list,file = './ABA_DEG_36.csv')
+write.csv(T7_list,file = './ABA_DEG_60.csv')
