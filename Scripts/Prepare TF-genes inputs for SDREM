@@ -1,6 +1,6 @@
 #Merge two PUBLIC interaction files into one file.
 ##set work directory
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/00_Public_Interaction_files")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/00_Public_Interaction_files")
 ##read in origin files
 DAP_file <- read.csv('DAPSeq_TFBinding_375642_geneID.csv')
 At_file <- read.csv('AtRegNet_direct_confirm_5082_geneID.csv')
@@ -54,7 +54,7 @@ write.csv(dap_at_na_file_unique, file = '0_publicdata_379994_interactions.csv', 
 
 #Merge public data with hormone interactions
 ##prepare the interactions file for ETH-SDREM
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/06_ETH_file")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/06_ETH_file")
 ETH_origin_file <- read.csv('ETH_14336_interactions.csv')
 length(ETH_origin_file$TF)
 length(unique(ETH_origin_file$TF))
@@ -65,7 +65,7 @@ length(unique(ETH_SDREM_file_unique$TF))
 write.csv(ETH_SDREM_file_unique, file = 'ETH_393882_interactions_for_SDREM.csv', row.names = F, quote = F)
 
 ##prepare the interactions file for JA-SDREM
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/01_JA_file")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/01_JA_file")
 JA_origin_file <- read.csv('JA_14343_interactions.csv')
 length(JA_origin_file$TF)
 length(unique(JA_origin_file$TF))
@@ -76,7 +76,7 @@ length(unique(JA_SDREM_file_unique$TF))
 write.csv(JA_SDREM_file_unique,file = 'JA_393948_interactions_for_SDREM.csv',row.names = F,quote = F)
 
 ##prepare the interactions file for SA-SDREM
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/02_SA_file")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/02_SA_file")
 SA_origin_file <-read.csv('SA_24770_interactions.csv')
 length(SA_origin_file$TF)
 length(unique(SA_origin_file$TF))
@@ -87,7 +87,7 @@ length(unique(SA_SDREM_file_unique$TF))
 write.csv(SA_SDREM_file_unique,file = 'SA_404349_interactions_for_SDREM.csv',row.names = F,quote = F)
 
 ##prepare the interactions file for BL-SDREM
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/03_BL_file")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/03_BL_file")
 BL_origin_file <-read.csv('BL_20890_interactions.csv')
 length(BL_origin_file$TF)
 length(unique(BL_origin_file$TF))
@@ -98,7 +98,7 @@ length(unique(BL_SDREM_file_unique$TF))
 write.csv(BL_SDREM_file_unique,file = 'BL_400488_interactions_for_SDREM.csv',row.names = F,quote = F)
 
 ##prepare the interactions file for SL_ABA-SDREM
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/04_SL_file")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/04_SL_file")
 SL_ABA_origin_file <-read.csv('SL_ABA_23609_interactions.csv')
 length(SL_ABA_origin_file$TF)
 length(unique(SL_ABA_origin_file$TF))
@@ -109,7 +109,7 @@ length(unique(SL_ABA_SDREM_file_unique$TF))
 write.csv(SL_ABA_SDREM_file_unique,file = 'SL_ABA_403207_interactions_for_SDREM.csv',row.names = F,quote = F)
 
 ###Add new DAP-Seq data
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv")
 new_dap_file <- read.csv('./00_New_DAP-Seq_interactions/9TFs_DAP-Seq_interactions.csv')
 length(new_dap_file$TF)
 length(unique(new_dap_file$TF))
@@ -147,7 +147,7 @@ write.csv(new_ETH_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/ETH_4
 
 
 #Double check the data integrity
-setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/00_FV_interactions_for_SDREM")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/00_FV_interactions_for_SDREM")
 library(tidyverse)
 library(reshape2)
 
@@ -230,7 +230,7 @@ write.csv(et_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_
 
 #Add New ABF ChIP data
 ##set work directory
-setwd("~/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
 
 ##read in Interactions under ABA treatment
 ABA_file <- read.csv("./00_ABFs_denova_Anno/3_ABFs_Annotation/ABA_20776_interactions_3TFs.csv")
@@ -250,7 +250,7 @@ length(unique(AIR_file_unique$TF))
 
 ##Combine ABA data with previous interactions
 ##read in the previous interactions firstly
-setwd("~/00_For_SDREM/1_origin_interactions_in_List_format/")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_v1/00_TF-Gene_interaction_fv/00_FV_interactions_for_SDREM/00_For_SDREM/1_origin_interactions_in_List_format/")
 JA_intera <- read.csv("./ja_425087_interactions_for_522TFs.csv")
 SA_intera <- read.csv('./sa_435514_interactions_for_522TFs.csv')
 BL_intera <- read.csv('./bl_431653_interactions_for_522TFs.csv')
@@ -259,7 +259,7 @@ ETH_intera <- read.csv('./et_425047_interactions_for_522TFs.csv')
 ABA_intera <- read.csv('./aba_434372_interactions_for_522TFs.csv')
 
 ##Merge interactions for individual hormone dataset
-setwd("~/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
 ##JA For SDREM
 new_JA_SDREM_file <-rbind(AIR_file_unique,JA_intera)
 new_JA_SDREM_file_unique <- new_JA_SDREM_file[!duplicated(new_JA_SDREM_file),]
