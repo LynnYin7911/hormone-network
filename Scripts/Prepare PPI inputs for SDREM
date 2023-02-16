@@ -1,0 +1,89 @@
+#Prepare PPIs from PUBLIC database BioGRID
+##set work directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/01_SDREM_12022020/00_Protein-Protein_interaction/0_New_PPI")
+
+##read in protein-protein interactions from BioGRID
+BioGRID_file <-read.csv('./BioGRID_56198_interactions.csv')
+BioGRID_file_unique <-BioGRID_file[!duplicated(BioGRID_file),]
+##check the complete of experimental methods in the bioGRID_file_unique
+BioGRID_file_unique1 <- BioGRID_file_unique[BioGRID_file_unique$method == '']
+
+##read scoring file
+score_file <- readxl::read_excel('./Protein_scoreing.xlsx', sheet = 1, col_names = F)
+
+##scoring the interactions by exeperimental methods --According to SDREM Scoring method
+BioGRID_file_unique$score <- NA
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Two-hybrid'] <- 0.3
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'PCA'] <- 0.3
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Affinity Capture-Western'] <- 0.5
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Affinity Capture-Luminescence'] <-0.5
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Affinity Capture-MS'] <- 0.5
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Affinity Capture-RNA'] <- 0.7
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Biochemical Activity'] <- 0.5
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Co-crystal Structure'] <- 0.99
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Co-fractionation'] <- 0.7
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Co-purification'] <-0.7
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Far Western'] <- 0.5
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'FRET'] <- 0.7
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Protein-peptide'] <-0.7
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Protein-RNA'] <-0.3
+BioGRID_file_unique$score[BioGRID_file_unique$method == 'Reconstituted Complex'] <-0.3
+
+##Apply a low weight (0.3) to the 416 interactions with no weight.
+unique(BioGRID_file_unique$method)
+BioGRID_file_unique_new <- BioGRID_file_unique
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Phenotypic Enhancement'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Phenotypic Suppression'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Dosage Growth Defect'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Synthetic Rescue'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Synthetic Growth Defect'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Dosage Rescue'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Co-localization'] <-0.3
+BioGRID_file_unique_new$score[BioGRID_file_unique_new$method == 'Synthetic Lethality'] <-0.3
+
+#Add the PPIs from nature paper (Altmann et ., 2020)
+##read in nature paper 2072 interactions (has appiled scores)
+Nature_file <-read.csv('./nature_paper_2072interactions.csv',header = T)
+Nature_file_unique <-Nature_file[!duplicated(Nature_file),]
+
+##combine the interactions together
+combind_file <-rbind(BioGRID_file_unique_new,Nature_file_unique)
+write.csv(combind_file,file = 'all_Protein_interactions_scores.csv',row.names = F,quote = F)
+
+##remove rows start without 'AT'
+combind_file_filter <- combind_file[grepl('^AT', combind_file$protein1, ignore.case = T) & grepl('^AT', combind_file$protein2, ignore.case = T),]
+head(combind_file_filter)
+dim(combind_file_filter)
+
+###pick the top score interactions between multi methods
+library(tidyverse)
+combined_top1 <- combind_file_filter %>%
+  group_by(protein1, protein2) %>%
+  top_n(n=1)
+
+##write out the scoring protein-protein interaction files
+unique(combined_top1$method)
+write.csv(combined_top1,file = 'New_53976_Protein_interactions_scores.csv',row.names = F,quote = F)
+
+##remove third column
+combined_top1 <- combined_top1[,c(1,2,4)]
+
+##remove col1 = col2
+##double check - pick the topest score
+library(tidyverse)
+combined_top1 <- combined_top1 %>%
+  group_by(protein1, protein2) %>%
+  top_n(n=1)
+unique(combined_top1$score)
+
+##remove same rows
+combined_top1_unique <-combined_top1[!duplicated(combined_top1),]
+
+##remove col1 in col 2
+proteinA_proteinB <- paste0(combined_top1_unique$protein1,combined_top1_unique$protein2)
+proteinB_proteinA <- paste0(combined_top1_unique$protein2,combined_top1_unique$protein1)
+combind_interactions_fv <- combined_top1_unique[! proteinA_proteinB %in% proteinB_proteinA,]
+
+##write out the edited interactions for SDREM use.
+write.csv(combind_interactions_fv,file = './new_46841_protein_interactions_for_SDREM.csv',quote = F, row.names = F)
+
