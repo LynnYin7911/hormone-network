@@ -1,4 +1,3 @@
-
 #Merge two PUBLIC interaction files into one file.
 ##set work directory
 setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/00_Public_Interaction_files")
@@ -51,6 +50,8 @@ unique(dap_at_na_file_unique$Gene)
 ##Write out the merged file----publicdata_379994_interactions!
 write.csv(dap_at_na_file_unique, file = '0_publicdata_379994_interactions.csv', row.names = F, quote = F)
 
+
+
 #Merge public data with hormone interactions
 ##prepare the interactions file for ETH-SDREM
 setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/06_ETH_file")
@@ -85,7 +86,7 @@ length(SA_SDREM_file_unique$TF)
 length(unique(SA_SDREM_file_unique$TF))
 write.csv(SA_SDREM_file_unique,file = 'SA_404349_interactions_for_SDREM.csv',row.names = F,quote = F)
 
-###prepare the interactions file for BL-SDREM
+##prepare the interactions file for BL-SDREM
 setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/03_BL_file")
 BL_origin_file <-read.csv('BL_20890_interactions.csv')
 length(BL_origin_file$TF)
@@ -96,7 +97,8 @@ length(BL_SDREM_file_unique$TF)
 length(unique(BL_SDREM_file_unique$TF))
 write.csv(BL_SDREM_file_unique,file = 'BL_400488_interactions_for_SDREM.csv',row.names = F,quote = F)
 
-###prepare the interactions file for SL_ABA-SDREM
+##prepare the interactions file for SL_ABA-SDREM
+setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/04_SL_file")
 SL_ABA_origin_file <-read.csv('SL_ABA_23609_interactions.csv')
 length(SL_ABA_origin_file$TF)
 length(unique(SL_ABA_origin_file$TF))
@@ -106,8 +108,8 @@ length(SL_ABA_SDREM_file_unique$TF)
 length(unique(SL_ABA_SDREM_file_unique$TF))
 write.csv(SL_ABA_SDREM_file_unique,file = 'SL_ABA_403207_interactions_for_SDREM.csv',row.names = F,quote = F)
 
-
 ###Add new DAP-Seq data
+setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv")
 new_dap_file <- read.csv('./00_New_DAP-Seq_interactions/9TFs_DAP-Seq_interactions.csv')
 length(new_dap_file$TF)
 length(unique(new_dap_file$TF))
@@ -116,243 +118,119 @@ new_JA_SDREM_file <-rbind(new_dap_file,JA_SDREM_file_unique)
 new_JA_SDREM_file_unique <- new_JA_SDREM_file[!duplicated(new_JA_SDREM_file),]
 length(new_JA_SDREM_file_unique$TF)
 length(unique(new_JA_SDREM_file_unique$TF))
-write.csv(new_JA_SDREM_file_unique,file = './01_JA_file/JA_425093_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
+write.csv(new_JA_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/JA_425093_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
 
 new_SA_SDREM_file <-rbind(new_dap_file,SA_SDREM_file_unique)
 new_SA_SDREM_file_unique <- new_SA_SDREM_file[!duplicated(new_SA_SDREM_file),]
 length(new_SA_SDREM_file_unique$TF)
 length(unique(new_SA_SDREM_file_unique$TF))
-write.csv(new_SA_SDREM_file_unique,file = './02_SA_file/SA_435520_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
+write.csv(new_SA_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/SA_435520_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
 
 new_BL_SDREM_file <-rbind(new_dap_file,BL_SDREM_file_unique)
 new_BL_SDREM_file_unique <- new_BL_SDREM_file[!duplicated(new_BL_SDREM_file),]
 length(new_BL_SDREM_file_unique$TF)
 length(unique(new_BL_SDREM_file_unique$TF))
-write.csv(new_BL_SDREM_file_unique,file = './03_BL_file//BL_431659_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
-
+write.csv(new_BL_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/BL_431659_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
 
 new_SL_ABA_SDREM_file <-rbind(new_dap_file,SL_ABA_SDREM_file_unique)
 new_SL_ABA_SDREM_file_unique <- new_SL_ABA_SDREM_file[!duplicated(new_SL_ABA_SDREM_file),]
 length(new_SL_ABA_SDREM_file_unique$TF)
 length(unique(new_SL_ABA_SDREM_file_unique$TF))
-write.csv(new_SL_ABA_SDREM_file_unique,file = './04_SL_file//SL_ABA_434378_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
-
+write.csv(new_SL_ABA_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/SL_ABA_434378_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
 
 new_ETH_SDREM_file <-rbind(new_dap_file,ETH_SDREM_file_unique)
 new_ETH_SDREM_file_unique <- new_ETH_SDREM_file[!duplicated(new_ETH_SDREM_file),]
 length(new_ETH_SDREM_file_unique$TF)
 length(unique(new_ETH_SDREM_file_unique$TF))
-write.csv(new_ETH_SDREM_file_unique,file = './06_ETH_file/ETH_425053_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
+write.csv(new_ETH_SDREM_file_unique,file = './00_FV_interactions_for_SDREM/ETH_425053_interactions_528TFs_SDREM_new.csv',row.names = F,quote = F)
 
 
-##Prepare the TF-GENE interaction file
 
-setwd("~/00_AgriBio_labwork/03-SDREM/00_TF-Gene_interaction_fv/00_FV_interactions_for_SDREM")
-
+#Double check the data integrity
+setwd("~/01_SDREM_v1/00_TF-Gene_interaction_fv/00_FV_interactions_for_SDREM")
 library(tidyverse)
 library(reshape2)
 
-###JA_DATA
+##JA_DATA
 ##read in the tf-gene interaction file that need edit for SDREM.
 ja_interaction <- read.csv('1_JA_425093_interactions_528TFs_SDREM_new.csv', stringsAsFactors = F)
 
-### remove the potential space in the gene name
+##remove the potential space in the gene name
 ja_interaction$TF <- gsub('[[:blank:]]', '', ja_interaction$TF)
 ja_interaction$Gene <- gsub('[[:blank:]]', '', ja_interaction$Gene)
 length(unique(tolower(ja_interaction$TF)))
 length(unique(tolower(ja_interaction$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 ja_interaction_unique <- ja_interaction[!duplicated(ja_interaction),]
 dim(ja_interaction_unique)
-write.csv(ja_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format//ja_425087_interactions_for_522TFs.csv',row.names = F,quote = F)
-
-
-##Re-arrange the file from list to matrix
-ja_interaction_dcast <- dcast(ja_interaction_unique, Gene ~ TF , value.var = 'Input')
-ja_interaction_dcast[is.na(ja_interaction_dcast)] <- 0
-
-### remove the same col and row names in the matrix
-ja_interaction_dcast2 <- ja_interaction_dcast[! ja_interaction_dcast$Gene %in% colnames(ja_interaction_dcast),]
-
-##write out the edited interaction files for SDREM USE
-dim(ja_interaction_dcast)
-write.csv(ja_interaction_dcast,file = './00_For_SDREM/2_interactions_keep_same_col_row_names/ja_TFactive0.csv',row.names = F,quote = F)
-write.table(ja_interaction_dcast, file = './00_For_SDREM/2_interactions_keep_same_col_row_names/ja_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-##test
-dim(ja_interaction_dcast2)
-write.csv(ja_interaction_dcast2,file = './00_For_SDREM/3_interations_remove_same_col_row_names/ja_TFactive0.csv',row.names = F,quote = F)
-write.table(ja_interaction_dcast2, file = './00_For_SDREM/3_interations_remove_same_col_row_names/ja_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
-
-
-
-
+write.csv(ja_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format/ja_425087_interactions_for_522TFs.csv',row.names = F,quote = F)
 
 ##SA_DATA
 ##read in the tf-gene interaction file that need edit for SDREM.
 sa_interaction <-read.csv('2_SA_435520_interactions_528TFs_SDREM_new.csv',stringsAsFactors = F)
 
-
-### remove the potential space in the gene name
+##remove the potential space in the gene name
 sa_interaction$TF <- gsub('[[:blank:]]', '', sa_interaction$TF)
 sa_interaction$Gene <- gsub('[[:blank:]]', '', sa_interaction$Gene)
 length(unique(tolower(sa_interaction$TF)))
 length(unique(tolower(sa_interaction$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 sa_interaction_unique <- sa_interaction[!duplicated(sa_interaction),]
 dim(sa_interaction_unique)
-write.csv(sa_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format//sa_435514_interactions_for_522TFs.csv',row.names = F,quote = F)
-
-##Re-arrange the file from list to matrix
-sa_interaction_dcast <- dcast(sa_interaction_unique, Gene ~ TF , value.var = 'Input')
-sa_interaction_dcast[is.na(sa_interaction_dcast)] <- 0
-
-### remove the same col and row names in the matrix
-sa_interaction_dcast2 <- sa_interaction_dcast[! sa_interaction_dcast$Gene %in% colnames(sa_interaction_dcast),]
-
-
-##write out the edited interaction files for SDREM USE
-dim(sa_interaction_dcast)
-write.csv(sa_interaction_dcast,file = './00_For_SDREM/2_interactions_keep_same_col_row_names/sa_TFactive0.csv',row.names = F,quote = F)
-write.table(sa_interaction_dcast, file = './00_For_SDREM/2_interactions_keep_same_col_row_names/sa_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-###test
-dim(sa_interaction_dcast2)
-write.csv(sa_interaction_dcast2,file = './00_For_SDREM/3_interations_remove_same_col_row_names/sa_TFactive0.csv',row.names = F,quote = F)
-write.table(sa_interaction_dcast2, file = './00_For_SDREM/3_interations_remove_same_col_row_names/sa_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
-
-
-
-
-
-
-
+write.csv(sa_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format/sa_435514_interactions_for_522TFs.csv',row.names = F,quote = F)
 
 ##BL_DATA
 ##read in the tf-gene interaction file that need edit for SDREM.
 bl_interaction <- read.csv('3_BL_431659_interactions_528TFs_SDREM_new.csv', stringsAsFactors = F)
 
-
-### remove the potential space in the gene name
+##remove the potential space in the gene name
 bl_interaction$TF <- gsub('[[:blank:]]', '', bl_interaction$TF)
 bl_interaction$Gene <- gsub('[[:blank:]]', '', bl_interaction$Gene)
 length(unique(tolower(bl_interaction$TF)))
 length(unique(tolower(bl_interaction$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 bl_interaction_unique <- bl_interaction[!duplicated(bl_interaction),]
 dim(bl_interaction_unique)
-write.csv(bl_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format//bl_431653_interactions_for_522TFs.csv',row.names = F,quote = F)
-
-
-##Re-arrange the file from list to matrix
-bl_interaction_dcast <- dcast(bl_interaction_unique, Gene ~ TF , value.var = 'Input')
-bl_interaction_dcast[is.na(bl_interaction_dcast)] <- 0
-
-### remove the same col and row names in the matrix
-bl_interaction_dcast2 <- bl_interaction_dcast[! bl_interaction_dcast$Gene %in% colnames(bl_interaction_dcast),]
-
-
-##write out the edited interaction files for SDREM USE
-dim(bl_interaction_dcast)
-write.csv(bl_interaction_dcast,file = './00_For_SDREM/2_interactions_keep_same_col_row_names/bl_TFactive0.csv',row.names = F,quote = F)
-write.table(bl_interaction_dcast, file = './00_For_SDREM/2_interactions_keep_same_col_row_names/bl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-## test
-dim(bl_interaction_dcast2)
-write.csv(bl_interaction_dcast2,file = './00_For_SDREM/3_interations_remove_same_col_row_names/bl_TFactive0.csv',row.names = F,quote = F)
-write.table(bl_interaction_dcast2, file = './00_For_SDREM/3_interations_remove_same_col_row_names/bl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
-
-
+write.csv(bl_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format/bl_431653_interactions_for_522TFs.csv',row.names = F,quote = F)
 
 ##SL_ABA_DATA
 ##read in the tf-gene interaction file that need edit for SDREM.
 sl_interaction <- read.csv('4_5_SL_ABA_434378_interactions_528TFs_SDREM_new.csv', stringsAsFactors = F)
 
-### remove the potential space in the gene name
+##remove the potential space in the gene name
 sl_interaction$TF <- gsub('[[:blank:]]', '', sl_interaction$TF)
 sl_interaction$Gene <- gsub('[[:blank:]]', '', sl_interaction$Gene)
 length(unique(tolower(sl_interaction$TF)))
 length(unique(tolower(sl_interaction$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 sl_interaction_unique <- sl_interaction[!duplicated(sl_interaction),]
 dim(sl_interaction_unique)
-write.csv(sl_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format//sl_434372_interactions_for_522TFs.csv',row.names = F,quote = F)
-
-
-##Re-arrange the file from list to matrix
-sl_interaction_dcast <- dcast(sl_interaction_unique, Gene ~ TF , value.var = 'Input')
-sl_interaction_dcast[is.na(sl_interaction_dcast)] <- 0
-
-### remove the same col and row names in the matrix
-sl_interaction_dcast2 <- sl_interaction_dcast[! sl_interaction_dcast$Gene %in% colnames(sl_interaction_dcast),]
-
-##write out the edited interaction files for SDREM USE
-dim(sl_interaction_dcast)
-write.csv(sl_interaction_dcast,file = './00_For_SDREM/2_interactions_keep_same_col_row_names/sl_TFactive0.csv',row.names = F,quote = F)
-write.table(sl_interaction_dcast, file = './00_For_SDREM/2_interactions_keep_same_col_row_names/sl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-##test
-dim(sl_interaction_dcast2)
-write.csv(sl_interaction_dcast2,file = './00_For_SDREM/3_interations_remove_same_col_row_names/sl_TFactive0.csv',row.names = F,quote = F)
-write.table(sl_interaction_dcast2, file = './00_For_SDREM/3_interations_remove_same_col_row_names/sl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
-
-
-
+write.csv(sl_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format/sl_434372_interactions_for_522TFs.csv',row.names = F,quote = F)
 
 ##ET_DATA
 ##read in the tf-gene interaction file that need edit for SDREM.
 et_interaction <- read.csv('6_ETH_425053_interactions_528TFs_SDREM_new.csv', stringsAsFactors = F)
 
-### remove the potential space in the gene name
+##remove the potential space in the gene name
 et_interaction$TF <- gsub('[[:blank:]]', '', et_interaction$TF)
 et_interaction$Gene <- gsub('[[:blank:]]', '', et_interaction$Gene)
 length(unique(tolower(et_interaction$TF)))
 length(unique(tolower(et_interaction$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 et_interaction_unique <- et_interaction[!duplicated(et_interaction),]
 dim(et_interaction_unique)
 write.csv(et_interaction_unique,file = './00_For_SDREM/1_origin_interactions_in_List_format/et_425047_interactions_for_522TFs.csv',row.names = F,quote = F)
 
 
-##Re-arrange the file from list to matrix
-et_interaction_dcast <- dcast(et_interaction_unique, Gene ~ TF , value.var = 'Input')
-et_interaction_dcast[is.na(et_interaction_dcast)] <- 0
 
-### remove the same col and row names in the matrix
-et_interaction_dcast2 <- et_interaction_dcast[! et_interaction_dcast$Gene %in% colnames(et_interaction_dcast),]
-
-
-##write out the edited interaction files for SDREM USE
-dim(et_interaction_dcast)
-write.csv(et_interaction_dcast,file = './00_For_SDREM/2_interactions_keep_same_col_row_names/et_TFactive0.csv',row.names = F,quote = F)
-write.table(et_interaction_dcast, file = './00_For_SDREM/2_interactions_keep_same_col_row_names/et_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-###test
-dim(et_interaction_dcast2)
-write.csv(et_interaction_dcast2,file = './00_For_SDREM/3_interations_remove_same_col_row_names/et_TFactive0.csv',row.names = F,quote = F)
-write.table(et_interaction_dcast2, file = './00_For_SDREM/3_interations_remove_same_col_row_names/et_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
-###Add New ABF ChIP data
-setwd("~/00_AgriBio_labwork/01_SDREM_11022020")
+#Add New ABF ChIP data
+##set work directory
+setwd("~/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
 
 ##read in Interactions under ABA treatment
 ABA_file <- read.csv("./00_ABFs_denova_Anno/3_ABFs_Annotation/ABA_20776_interactions_3TFs.csv")
@@ -364,19 +242,15 @@ AIR_file <- read.csv("./00_ABFs_denova_Anno/3_ABFs_Annotation/air_13148_interact
 length(AIR_file$TF)
 length(unique(AIR_file$TF))
 
-
 ##leave the unique interactions
 ABA_file_unique <- ABA_file[!duplicated(ABA_file),]
 AIR_file_unique <- AIR_file[!duplicated(AIR_file),]
 length(unique(ABA_file_unique$TF))
 length(unique(AIR_file_unique$TF))
 
-
-
-###Combine ABA data with previous interactions
-
+##Combine ABA data with previous interactions
 ##read in the previous interactions firstly
-setwd("~/00_AgriBio_labwork/01_SDREM_11022020/00_For_SDREM_old")
+setwd("~/00_For_SDREM/1_origin_interactions_in_List_format/")
 JA_intera <- read.csv("./ja_425087_interactions_for_522TFs.csv")
 SA_intera <- read.csv('./sa_435514_interactions_for_522TFs.csv')
 BL_intera <- read.csv('./bl_431653_interactions_for_522TFs.csv')
@@ -384,17 +258,14 @@ SL_intera <- read.csv('./sl_434372_interactions_for_522TFs.csv')
 ETH_intera <- read.csv('./et_425047_interactions_for_522TFs.csv')
 ABA_intera <- read.csv('./aba_434372_interactions_for_522TFs.csv')
 
-
-###Merge interactions for individual hormone dataset
-setwd("~/00_AgriBio_labwork/01_SDREM_11022020/For_SDREM")
-
+##Merge interactions for individual hormone dataset
+setwd("~/01_SDREM_12022020/00_For_SDREM_add_3ABFs")
 ##JA For SDREM
 new_JA_SDREM_file <-rbind(AIR_file_unique,JA_intera)
 new_JA_SDREM_file_unique <- new_JA_SDREM_file[!duplicated(new_JA_SDREM_file),]
 length(new_JA_SDREM_file_unique$TF)
 length(unique(new_JA_SDREM_file_unique$TF))
 write.csv(new_JA_SDREM_file_unique,file = './JA_438234_interactions_523TFs.csv',row.names = F,quote = F)
-
 
 ##SA For SDREM
 new_SA_SDREM_file <-rbind(AIR_file_unique,SA_intera)
@@ -403,15 +274,12 @@ length(new_SA_SDREM_file_unique$TF)
 length(unique(new_SA_SDREM_file_unique$TF))
 write.csv(new_SA_SDREM_file_unique,file = './SA_448661_interactions_523TFs.csv',row.names = F,quote = F)
 
-
 ##BL For SDREM
 new_BL_SDREM_file <-rbind(AIR_file_unique,BL_intera)
 new_BL_SDREM_file_unique <- new_BL_SDREM_file[!duplicated(new_BL_SDREM_file),]
 length(new_BL_SDREM_file_unique$TF)
 length(unique(new_BL_SDREM_file_unique$TF))
 write.csv(new_BL_SDREM_file_unique,file = './BL_444800_interactions_523TFs.csv',row.names = F,quote = F)
-
-
 
 ##SL For SDREM
 new_SL_SDREM_file <-rbind(AIR_file_unique,SL_intera)
@@ -420,14 +288,12 @@ length(new_SL_SDREM_file_unique$TF)
 length(unique(new_SL_SDREM_file_unique$TF))
 write.csv(new_SL_SDREM_file_unique,file = './SL_447519_interactions_523TFs.csv',row.names = F,quote = F)
 
-
 ##ETH For SDREM
 new_ETH_SDREM_file <-rbind(AIR_file_unique,ETH_intera)
 new_ETH_SDREM_file_unique <- new_ETH_SDREM_file[!duplicated(new_ETH_SDREM_file),]
 length(new_ETH_SDREM_file_unique$TF)
 length(unique(new_ETH_SDREM_file_unique$TF))
 write.csv(new_ETH_SDREM_file_unique,file = './ETH_438194_interactions_523TFs.csv',row.names = F,quote = F)
-
 
 ##ABA For SDREM
 new_ABA_SDREM_file <-rbind(ABA_file_unique,ABA_intera)
@@ -438,18 +304,18 @@ write.csv(new_ABA_SDREM_file_unique,file = './ABA_455145_interactions_523TFs.csv
 
 
 
-###Prepare the TF-Gene interactions matrix for SDREM --- TF cast
+#Prepare the TF-Gene interactions matrix for SDREM --- TF cast
 library(tidyverse)
 library(reshape2)
 
-###JA
+##JA
 ### remove the potential space in the gene name
 new_JA_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_JA_SDREM_file_unique$TF)
 new_JA_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_JA_SDREM_file_unique$Gene)
 length(unique(tolower(new_JA_SDREM_file_unique$TF)))
 length(unique(tolower(new_JA_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 ja_interaction_unique <- new_JA_SDREM_file_unique[!duplicated(new_JA_SDREM_file_unique),]
 dim(ja_interaction_unique)
 
@@ -461,17 +327,14 @@ ja_interaction_dcast[is.na(ja_interaction_dcast)] <- 0
 dim(ja_interaction_dcast)
 write.table(ja_interaction_dcast, file = './ja_TFactive0.txt', sep = '\t', row.names = F, quote = F)
 
-
-
-
-###SA
-### remove the potential space in the gene name
+##SA
+##remove the potential space in the gene name
 new_SA_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_SA_SDREM_file_unique$TF)
 new_SA_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_SA_SDREM_file_unique$Gene)
 length(unique(tolower(new_SA_SDREM_file_unique$TF)))
 length(unique(tolower(new_SA_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 sa_interaction_unique <- new_SA_SDREM_file_unique[!duplicated(new_SA_SDREM_file_unique),]
 dim(sa_interaction_unique)
 
@@ -483,17 +346,14 @@ sa_interaction_dcast[is.na(sa_interaction_dcast)] <- 0
 dim(sa_interaction_dcast)
 write.table(sa_interaction_dcast, file = './sa_TFactive0.txt', sep = '\t', row.names = F, quote = F)
 
-
-
-
-###BL
+##BL
 ### remove the potential space in the gene name
 new_BL_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_BL_SDREM_file_unique$TF)
 new_BL_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_BL_SDREM_file_unique$Gene)
 length(unique(tolower(new_BL_SDREM_file_unique$TF)))
 length(unique(tolower(new_BL_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 bl_interaction_unique <- new_BL_SDREM_file_unique[!duplicated(new_BL_SDREM_file_unique),]
 dim(bl_interaction_unique)
 
@@ -505,17 +365,14 @@ bl_interaction_dcast[is.na(bl_interaction_dcast)] <- 0
 dim(bl_interaction_dcast)
 write.table(bl_interaction_dcast, file = './bl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
 
-
-
-
-###SL
+##SL
 ### remove the potential space in the gene name
 new_SL_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_SL_SDREM_file_unique$TF)
 new_SL_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_SL_SDREM_file_unique$Gene)
 length(unique(tolower(new_SL_SDREM_file_unique$TF)))
 length(unique(tolower(new_SL_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 sl_interaction_unique <- new_SL_SDREM_file_unique[!duplicated(new_SL_SDREM_file_unique),]
 dim(sl_interaction_unique)
 
@@ -527,16 +384,14 @@ sl_interaction_dcast[is.na(sl_interaction_dcast)] <- 0
 dim(sl_interaction_dcast)
 write.table(sl_interaction_dcast, file = './sl_TFactive0.txt', sep = '\t', row.names = F, quote = F)
 
-
-
-###ETH
+##ETH
 ### remove the potential space in the gene name
 new_ETH_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_ETH_SDREM_file_unique$TF)
 new_ETH_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_ETH_SDREM_file_unique$Gene)
 length(unique(tolower(new_ETH_SDREM_file_unique$TF)))
 length(unique(tolower(new_ETH_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 eth_interaction_unique <- new_ETH_SDREM_file_unique[!duplicated(new_ETH_SDREM_file_unique),]
 dim(eth_interaction_unique)
 
@@ -548,17 +403,14 @@ eth_interaction_dcast[is.na(eth_interaction_dcast)] <- 0
 dim(eth_interaction_dcast)
 write.table(eth_interaction_dcast, file = './eth_TFactive0.txt', sep = '\t', row.names = F, quote = F)
 
-
-
-
-###ABA
-### remove the potential space in the gene name
+##ABA
+##remove the potential space in the gene name
 new_ABA_SDREM_file_unique$TF <- gsub('[[:blank:]]', '', new_ABA_SDREM_file_unique$TF)
 new_ABA_SDREM_file_unique$Gene <- gsub('[[:blank:]]', '', new_ABA_SDREM_file_unique$Gene)
 length(unique(tolower(new_ABA_SDREM_file_unique$TF)))
 length(unique(tolower(new_ABA_SDREM_file_unique$Gene)))
 
-### Check the unique of interactions
+##Check the unique of interactions
 aba_interaction_unique <- new_ABA_SDREM_file_unique[!duplicated(new_ABA_SDREM_file_unique),]
 dim(aba_interaction_unique)
 
@@ -569,6 +421,3 @@ aba_interaction_dcast[is.na(aba_interaction_dcast)] <- 0
 ##write out the edited interaction files for SDREM USE
 dim(aba_interaction_dcast)
 write.table(aba_interaction_dcast, file = './aba_TFactive0.txt', sep = '\t', row.names = F, quote = F)
-
-
-
