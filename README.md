@@ -25,7 +25,7 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
 2. Peak annotations via ChIPpeakAnno
 3. Input files for running SDREM (gene expression matrix; TF-target interactions; protein-protein interactions) preparation (Scripts: edgeR (in the last section prepare gene expression inputs for SDREM) & Prepare TF-genes inputs for SDREM & Prepare PPI inputs for SDREM)
-4. TF family distribution and enrichment analysis
+4. TF family distribution and enrichment analysis (Scripts: TF_family_enrichment)
 5. Hub target genes identification and expression distribution plot generation
 6. Gene Ontology enrichment analysis
 7. Differentially alternative spliced (DAS) genes and DEGs start time clarification (Scripts: Calculate_DAS_first_appear)
