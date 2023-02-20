@@ -1,0 +1,96 @@
+#This script is written for counting the number of TFs in each TF family and conducting the enrichment of their family distribution
+
+##set work directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_SDREM_newPPI/0_DREM_predictedTF_family")
+##load required packages
+library(tidyverse)
+library(ggplot2)
+library(reshape2)
+
+##read in the predicted TF lists for each hormone
+ja_tfs <-read.csv('./0_Input/JA10_41TFs.csv')
+sa_tfs <-read.csv('./0_Input/SA10_52TFs.csv')
+br_tfs <-read.csv('./0_Input/BR10_41TFs.csv')
+sl_tfs <-read.csv('./0_Input/SL10_49TFs.csv')
+aba_tfs <-read.csv('./0_Input/ABA10_40TFs.csv')
+et_tfs <-read.csv('./0_Input/ET12_30TFs.csv')
+
+##read in TF Family information file from PlantTFDB
+TF_family <-read.csv('./0_Input/TF_Family_plantTFDB.csv')
+TF_family_unique <- TF_family[!duplicated(TF_family),]
+
+##merge to get the family info for each predicted TFs
+ja_family <- merge(ja_tfs, TF_family_unique)
+sa_family <- merge(sa_tfs, TF_family_unique)
+br_family <- merge(br_tfs, TF_family_unique)
+sl_family <- merge(sl_tfs, TF_family_unique)
+aba_family <- merge(aba_tfs, TF_family_unique)
+et_family <- merge(et_tfs, TF_family_unique)
+
+##Write out tf-family files for record
+write.csv(ja_family, file = './0_ET12/JA10_family.csv')
+write.csv(sa_family, file = './0_ET12/SA10_family.csv')
+write.csv(br_family, file = './0_ET12/BR10_family.csv')
+write.csv(sl_family, file = './0_ET12/SL10_family.csv')
+write.csv(aba_family, file = './0_ET12/ABA10_family.csv')
+write.csv(et_family, file = './0_ET12/ET12_family.csv')
+
+##function-achieve count the numbers of TFs for six hormone TF-list
+hormone_TF_family <- ls(pattern = '[a-z]{2,3}_family')
+for(hormone in hormone_TF_family){
+  hormone_name <- sapply(strsplit(hormone,'_'),'[[',1)
+  hormone_df <- get(hormone)
+  hormone_df$hormone <- hormone_name
+  assign(paste0(hormone_name,'_family_with_name'), hormone_df)
+}
+
+##combine six lists into one file
+combined_hormone_TF_family <- do.call("rbind",list(ja_family_with_name, sa_family_with_name,br_family_with_name,sl_family_with_name,aba_family_with_name,et_family_with_name))
+
+##add columns that include:the number of predicted TFs in each hormone, the total number of TFs in every family in genome wide,and the number of TFs in each family.
+hormone_TF_count <- as.data.frame(as.matrix(xtabs(data = combined_hormone_TF_family, ~ Family + hormone)))
+hormone_TF_count <- dcast(hormone_TF_count, Family ~ hormone, value.var = 'Freq')
+tf_num <- as.data.frame(table(TF_family_unique$Family))
+hormone_TF_count <- merge(hormone_TF_count, tf_num, by=1)
+hormone_TF_count <-  rename(hormone_TF_count, TF_total_number = Freq)
+hormone_TF_count <- melt(hormone_TF_count, id=c('Family','TF_total_number'), variable.name = 'hormone', value.name = 'Freq')
+hormone_TF_count$hormone_total_count <- ifelse(hormone_TF_count$hormone == 'ja', nrow(ja_family_with_name),
+                                               ifelse(hormone_TF_count$hormone == 'sa',nrow(sa_family_with_name),
+                                                      ifelse(hormone_TF_count$hormone == 'br', nrow(br_family_with_name), 
+                                                             ifelse(hormone_TF_count$hormone=='sl', nrow(sl_family_with_name),
+                                                                    ifelse(hormone_TF_count$hormone =='aba', nrow(aba_family_with_name), 
+                                                                           ifelse(hormone_TF_count$hormone =='et', nrow(et_family_with_name),NA))))))
+##arrange the order of column
+hormone_TF_count <- hormone_TF_count[,c(1,3,4,2,5)]
+
+##conduct the hyper test-1726 are the total TFs in arabidopsis
+hormone_TF_count$hyper_g <- -log10(phyper(hormone_TF_count$Freq-1, hormone_TF_count$TF_total_number, 1726-hormone_TF_count$TF_total_number, hormone_TF_count$hormone_total_count, lower.tail = F))
+
+##write out the results
+write.csv(hormone_TF_count,file = './0_ET12/TFs_family_phyper.csv')
+
+##get TF familys that dose not show in any hormone
+TF_hormone_count <- dcast(hormone_TF_count, Family ~ hormone, value.var = 'Freq')
+TF_hormone_count$total <- rowSums(TF_hormone_count[,-1])
+exclude_TFs <- as.character(TF_hormone_count[TF_hormone_count$total == 0,]$Family)
+hormone_TF_count <- hormone_TF_count[!hormone_TF_count$Family %in% exclude_TFs,]
+
+##make order - JA-SA-BR-SL-ABA-ET
+hormone_TF_count$hormone <- factor(hormone_TF_count$hormone, levels = c('ja','sa','br','sl','aba','et'))
+
+##draw bubble plot - red_grey plot -add one column of significant first
+hormone_TF_count$Significant <- ifelse(hormone_TF_count$hyper_g >=2, 'Yes','No')
+ggplot(hormone_TF_count, aes(x=hormone, y=Family, size=Freq, col=Significant)) +
+  geom_point()+
+  scale_color_manual(values=c('grey','red'))+
+  theme_bw()
+ggsave("combined_significant.pdf")
+
+##color_gradient plot
+library(RColorBrewer)
+library(scales)
+ggplot(hormone_TF_count, aes(x=hormone, y=Family, size=Freq, col=hyper_g)) +
+  geom_point()+
+  scale_color_gradientn(colors=c('lightgrey','lightgrey','lightgrey','darkorange','red','darkred'),values =rescale(c(0,1.4,1.41,4,6)))+
+  theme_bw()
+ggsave("combined_color_gradient.pdf")
