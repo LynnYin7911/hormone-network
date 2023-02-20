@@ -75,8 +75,8 @@ TF_hormone_count$total <- rowSums(TF_hormone_count[,-1])
 exclude_TFs <- as.character(TF_hormone_count[TF_hormone_count$total == 0,]$Family)
 hormone_TF_count <- hormone_TF_count[!hormone_TF_count$Family %in% exclude_TFs,]
 
-##make order - JA-SA-BR-SL-ABA-ET
-hormone_TF_count$hormone <- factor(hormone_TF_count$hormone, levels = c('ja','sa','br','sl','aba','et'))
+##make order - ABA-BR-ET-JA-SA-SL/KAR
+hormone_TF_count$hormone <- factor(hormone_TF_count$hormone, levels = c('aba','br','et','ja','sa','sl'))
 
 ##draw bubble plot - red_grey plot -add one column of significant first
 hormone_TF_count$Significant <- ifelse(hormone_TF_count$hyper_g >=2, 'Yes','No')
