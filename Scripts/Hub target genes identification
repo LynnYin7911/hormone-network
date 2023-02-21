@@ -11,6 +11,9 @@ require(plyr)
 require(gridExtra)
 require(grid)
 
+##Set work directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_Hot gene_targets prepare/0_Own_ChIP_TargetGenes_Sum_For salk coopreation")
+
 ##Prepare the TF-targets list for each hormone
 ###prepare for JA dataset - read in the target genes set for each TF - 10 JA treatment and 6 air treatment
 MYC3_JA <-readxl::read_excel('./02JA_Treatment/MYC3_JA.xlsx', sheet = 1, col_names = T)
@@ -27,8 +30,8 @@ EDF1_AIR <-readxl::read_excel('./01ETH_Treatment/EDF1_AIR.xlsx', sheet = 1, col_
 EDF3_AIR <-readxl::read_excel('./01ETH_Treatment/EDF3_AIR.xlsx', sheet = 1, col_names = T)
 TGA5_AIR <-readxl::read_excel('./01ETH_Treatment/TGA5_AIR.xlsx', sheet = 1, col_names = T)
 BES1_AIR <-readxl::read_excel('./01ETH_Treatment/BES1_AIR.xlsx', sheet = 1, col_names = T)
-ABF3_AIR <-read.csv('../ABF3_7765_interactions_air.csv')
-ABF4_AIR <-read.csv('../ABF4_5383_interactions_air.csv')
+ABF3_AIR <-read.csv('../0_ABA_Public_ChIP_Targetgenes/ABF3_7765_interactions_air.csv')
+ABF4_AIR <-read.csv('../0_ABA_Public_ChIP_Targetgenes/ABF4_5383_interactions_air.csv')
 
 ###prepare for SA dataset - read in the target genes set for each TF - 1 SA treatment, 8 air treatment and 6 2-air treatment
 TGA5_SA <-readxl::read_excel('./TGA5_SA.xlsx', sheet = 1, col_names = T)
@@ -68,9 +71,9 @@ TCP3_BR <- readxl::read_excel('./TCP3_BL.xlsx', sheet = 1, col_names = T)
 ###prepare for SL dataset - read in the target genes set for each TF - 9 air treatment and 6 2-air treatment
 
 ###prepare for ABA dataset - read in the target genes set for each TF - 3 ABA treatment, 7 air treatment and 6 2-air treatment
-ABF1_ABA <-read.csv('../ABF1_5434_interactions_ABA.csv')
-ABF3_ABA <-read.csv('../ABF3_7942_interactions_ABA.csv')
-ABF4_ABA <-read.csv('../ABF4_7400_interactions_ABA.csv')
+ABF1_ABA <-read.csv('../0_ABA_Public_ChIP_Targetgenes/ABF1_5434_interactions_ABA.csv')
+ABF3_ABA <-read.csv('../0_ABA_Public_ChIP_Targetgenes/ABF3_7942_interactions_ABA.csv')
+ABF4_ABA <-read.csv('../0_ABA_Public_ChIP_Targetgenes/ABF4_7400_interactions_ABA.csv')
 
 ###prepare for ET dataset - read in the target genes set for each TF - 13 ET treatment, 2 air treatment
 RAP26L_ET <-readxl::read_excel('./01ETH_Treatment/RAP26L_ETH.xlsx', sheet = 1, col_names = T)
@@ -87,7 +90,7 @@ BES1_ET <-readxl::read_excel('./01ETH_Treatment/BES1_ETH.xlsx', sheet = 1, col_n
 ANAC055_ET <-readxl::read_excel('./01ETH_Treatment/ANAC055_ETH.xlsx', sheet = 1, col_names = T)
 EDF2_ET <-readxl::read_excel('./01ETH_Treatment/EDF2_ETH.xlsx', sheet = 1, col_names = T)
 
-###JA - formlist function
+###check the interactions for each hormone - ja 
 JA_16TFs <- list(MYC3_JA= MYC3_JA$MYC3_JA,
                  MYC2_JA= MYC2_JA$MYC2_JA,
                  TCP3_JA=TCP3_JA$TCP3_JA,
