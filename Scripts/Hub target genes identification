@@ -1,7 +1,13 @@
-This script is written for identify the hub target genes (step1:bin the targets )
+#This script is written for identify the hub target genes.
+#step1:bin the targets by the number of TFs bound them 
+#step2:apply the log2fc for each targets 
+#step3:draw the density plot and calculate the distribution differences
+
+##Load the required packages
 library(tidyverse)
-### prepare for JA dataset
-##read in the target genes set for each TF - 10 JA treatment and 6 air treatment
+
+##Prepare the TF-targets list for each hormone
+###prepare for JA dataset - read in the target genes set for each TF - 10 JA treatment and 6 air treatment
 MYC3_JA <-readxl::read_excel('./02JA_Treatment/MYC3_JA.xlsx', sheet = 1, col_names = T)
 MYC2_JA <-readxl::read_excel('./02JA_Treatment/MYC2_JA.xlsx', sheet = 1, col_names = T)
 TCP3_JA <-readxl::read_excel('./02JA_Treatment/TCP3_JA.xlsx', sheet = 1, col_names = T)
@@ -19,9 +25,7 @@ BES1_AIR <-readxl::read_excel('./01ETH_Treatment/BES1_AIR.xlsx', sheet = 1, col_
 ABF3_AIR <-read.csv('../ABF3_7765_interactions_air.csv')
 ABF4_AIR <-read.csv('../ABF4_5383_interactions_air.csv')
 
-
-### prepare for SA dataset
-##read in the target genes set for each TF - 1 SA treatment, 8 air treatment and 6 2-air treatment
+###prepare for SA dataset - read in the target genes set for each TF - 1 SA treatment, 8 air treatment and 6 2-air treatment
 TGA5_SA <-readxl::read_excel('./TGA5_SA.xlsx', sheet = 1, col_names = T)
 EIN3_AIR <-readxl::read_excel('./01ETH_Treatment/EIN3_AIR.xlsx', sheet = 1, col_names = T)
 STZ_AIR <-readxl::read_excel('./02JA_Treatment/STZ_AIR.xlsx', sheet = 1, col_names = T)
