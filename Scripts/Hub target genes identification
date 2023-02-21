@@ -1,0 +1,557 @@
+This script is written for identify the hub target genes (step1:bin the targets )
+library(tidyverse)
+### prepare for JA dataset
+##read in the target genes set for each TF - 10 JA treatment and 6 air treatment
+MYC3_JA <-readxl::read_excel('./02JA_Treatment/MYC3_JA.xlsx', sheet = 1, col_names = T)
+MYC2_JA <-readxl::read_excel('./02JA_Treatment/MYC2_JA.xlsx', sheet = 1, col_names = T)
+TCP3_JA <-readxl::read_excel('./02JA_Treatment/TCP3_JA.xlsx', sheet = 1, col_names = T)
+OBP2_JA <-readxl::read_excel('./02JA_Treatment/OBP2_JA.xlsx', sheet = 1, col_names = T)
+RAP26L_JA <-readxl::read_excel('./02JA_Treatment/RAP26L_JA.xlsx', sheet = 1, col_names = T)
+STZ_JA <-readxl::read_excel('./02JA_Treatment/STZ_JA.xlsx', sheet = 1, col_names = T)
+ANAC055_JA <-readxl::read_excel('./02JA_Treatment/ANAC055_JA.xlsx', sheet = 1, col_names = T)
+ERF1_JA <-readxl::read_excel('./02JA_Treatment/ERF1_JA.xlsx', sheet = 1, col_names = T)
+EDF2_JA <-readxl::read_excel('./EDF2_JA.xlsx', sheet = 1, col_names = T)
+EIN3_JA <-readxl::read_excel('./EIN3_JA.xlsx', sheet = 1, col_names = T)
+EDF1_AIR <-readxl::read_excel('./01ETH_Treatment/EDF1_AIR.xlsx', sheet = 1, col_names = T)
+EDF3_AIR <-readxl::read_excel('./01ETH_Treatment/EDF3_AIR.xlsx', sheet = 1, col_names = T)
+TGA5_AIR <-readxl::read_excel('./01ETH_Treatment/TGA5_AIR.xlsx', sheet = 1, col_names = T)
+BES1_AIR <-readxl::read_excel('./01ETH_Treatment/BES1_AIR.xlsx', sheet = 1, col_names = T)
+ABF3_AIR <-read.csv('../ABF3_7765_interactions_air.csv')
+ABF4_AIR <-read.csv('../ABF4_5383_interactions_air.csv')
+
+
+### prepare for SA dataset
+##read in the target genes set for each TF - 1 SA treatment, 8 air treatment and 6 2-air treatment
+TGA5_SA <-readxl::read_excel('./TGA5_SA.xlsx', sheet = 1, col_names = T)
+EIN3_AIR <-readxl::read_excel('./01ETH_Treatment/EIN3_AIR.xlsx', sheet = 1, col_names = T)
+STZ_AIR <-readxl::read_excel('./02JA_Treatment/STZ_AIR.xlsx', sheet = 1, col_names = T)
+EDF2_AIR <-readxl::read_excel('./01ETH_Treatment/EDF2_AIR.xlsx', sheet = 1, col_names = T)
+###2-Air target genes set
+RAP26L_AIR_1 <-readxl::read_excel('./01ETH_Treatment/RAP26L_AIR.xlsx', sheet = 1, col_names = T)
+RAP26L_AIR_2 <-readxl::read_excel('./02JA_Treatment/RAP26L_AIR.xlsx', sheet = 1, col_names = T)
+RAP26L_2AIR <- rbind(RAP26L_AIR_1,RAP26L_AIR_2)
+RAP26L_2AIR_unique <- RAP26L_2AIR[!duplicated(RAP26L_2AIR),]
+
+MYC3_AIR_1 <-readxl::read_excel('./01ETH_Treatment/MYC3_AIR.xlsx', sheet = 1, col_names = T)
+MYC3_AIR_2 <-readxl::read_excel('./02JA_Treatment/MYC3_AIR.xlsx', sheet = 1, col_names = T)
+MYC3_AIR_2AIR <- rbind(MYC3_AIR_1,MYC3_AIR_2)
+MYC3_AIR_2AIR_unique <- MYC3_AIR_2AIR[!duplicated(MYC3_AIR_2AIR),]
+
+MYC2_AIR_1 <-readxl::read_excel('./01ETH_Treatment/MYC2_AIR.xlsx', sheet = 1, col_names = T)
+MYC2_AIR_2 <-readxl::read_excel('./02JA_Treatment/MYC2_AIR.xlsx', sheet = 1, col_names = T)
+MYC2_2AIR <- rbind(MYC2_AIR_1,MYC2_AIR_2)
+MYC2_2AIR_unique <- MYC2_2AIR[!duplicated(MYC2_2AIR),]
+
+OBP2_AIR_1 <-readxl::read_excel('./01ETH_Treatment/OBP2_AIR.xlsx', sheet = 1, col_names = T)
+OBP2_AIR_2 <-readxl::read_excel('./02JA_Treatment/OBP2_AIR.xlsx', sheet = 1, col_names = T)
+OBP2_2AIR <- rbind(OBP2_AIR_1,OBP2_AIR_2)
+OBP2_2AIR_unique <- OBP2_2AIR[!duplicated(OBP2_2AIR),]
+
+TCP3_AIR_1 <-readxl::read_excel('./01ETH_Treatment/TCP3_AIR.xlsx', sheet = 1, col_names = T)
+TCP3_AIR_2 <-readxl::read_excel('./02JA_Treatment/TCP3_AIR.xlsx', sheet = 1, col_names = T)
+TCP3_2AIR <- rbind(TCP3_AIR_1,TCP3_AIR_2)
+TCP3_2AIR_unique <- TCP3_2AIR[!duplicated(TCP3_2AIR),]
+
+ANAC055_AIR_1 <-readxl::read_excel('./01ETH_Treatment/ANAC055_AIR.xlsx', sheet = 1, col_names = T)
+ANAC055_AIR_2 <-readxl::read_excel('./02JA_Treatment/ANAC055_AIR.xlsx', sheet = 1, col_names = T)
+ANAC055_2AIR <- rbind(ANAC055_AIR_1,ANAC055_AIR_2)
+ANAC055_2AIR_unique <- ANAC055_2AIR[!duplicated(ANAC055_2AIR),]
+
+
+### prepare for BR dataset
+##read in the target genes set for each TF - 2 BR treatment, 8 air treatment and 5 2-air treatment
+BES1_BR <- readxl::read_excel('./BES1_BL.xlsx', sheet = 1, col_names = T)
+TCP3_BR <- readxl::read_excel('./TCP3_BL.xlsx', sheet = 1, col_names = T)
+
+### prepare for SL dataset
+##read in the target genes set for each TF - 9 air treatment and 6 2-air treatment
+
+### prepare for ABA dataset
+##read in the target genes set for each TF - 3 ABA treatment, 7 air treatment and 6 2-air treatment
+ABF1_ABA <-read.csv('../ABF1_5434_interactions_ABA.csv')
+ABF3_ABA <-read.csv('../ABF3_7942_interactions_ABA.csv')
+ABF4_ABA <-read.csv('../ABF4_7400_interactions_ABA.csv')
+
+
+### prepare for ET dataset
+##read in the target genes set for each TF - 13 ET treatment, 2 air treatment
+RAP26L_ET <-readxl::read_excel('./01ETH_Treatment/RAP26L_ETH.xlsx', sheet = 1, col_names = T)
+MYC3_ET <-readxl::read_excel('./01ETH_Treatment/MYC3_ETH.xlsx', sheet = 1, col_names = T)
+EDF1_ET <-readxl::read_excel('./01ETH_Treatment/EDF1_ETH.xlsx', sheet = 1, col_names = T)
+EDF3_ET <-readxl::read_excel('./01ETH_Treatment/EDF3_ETH.xlsx', sheet = 1, col_names = T)
+EIN3_ET <-readxl::read_excel('./01ETH_Treatment/EIN3_ETH.xlsx', sheet = 1, col_names = T)
+OBP2_ET <-readxl::read_excel('./01ETH_Treatment/OBP2_ETH.xlsx', sheet = 1, col_names = T)
+MYC2_ET <-readxl::read_excel('./01ETH_Treatment/MYC2_ETH.xlsx', sheet = 1, col_names = T)
+STZ_ET <-readxl::read_excel('./01ETH_Treatment/STZ_ETH.xlsx', sheet = 1, col_names = T)
+TGA5_ET <-readxl::read_excel('./01ETH_Treatment/TGA5_ETH.xlsx', sheet = 1, col_names = T)
+TCP3_ET <-readxl::read_excel('./01ETH_Treatment/TCP3_ETH.xlsx', sheet = 1, col_names = T)
+BES1_ET <-readxl::read_excel('./01ETH_Treatment/BES1_ETH.xlsx', sheet = 1, col_names = T)
+ANAC055_ET <-readxl::read_excel('./01ETH_Treatment/ANAC055_ETH.xlsx', sheet = 1, col_names = T)
+EDF2_ET <-readxl::read_excel('./01ETH_Treatment/EDF2_ETH.xlsx', sheet = 1, col_names = T)
+
+
+
+#### USE upsetR
+library(UpSetR)
+require(ggplot2)
+require(plyr)
+require(gridExtra)
+require(grid)
+
+
+###JA - formlist function
+JA_16TFs <- list(MYC3_JA= MYC3_JA$MYC3_JA,
+                 MYC2_JA= MYC2_JA$MYC2_JA,
+                 TCP3_JA=TCP3_JA$TCP3_JA,
+                 OBP2_JA=OBP2_JA$OBP2_JA,
+                 RAP26L_JA=RAP26L_JA$RAP26L_JA,
+                 STZ_JA=STZ_JA$STZ_JA,
+                 ANAC055_JA=ANAC055_JA$ANAC055_JA,
+                 ERF1_JA=ERF1_JA$ERF1_JA,
+                 EDF2_JA=EDF2_JA$EDF2_JA,
+                 EIN3_JA=EIN3_JA$EIN3_JA,
+                 EDF1_AIR=EDF1_AIR$EDF1_AIR,
+                 EDF3_AIR=EDF3_AIR$EDF3_AIR,
+                 TGA5_AIR=TGA5_AIR$TGA5_AIR,
+                 BES1_AIR=BES1_AIR$BES1_AIR,
+                 ABF3_AIR=ABF3_AIR$ABF3_AIR,
+                 ABF4_AIR=ABF4_AIR$ABF4_AIR)
+
+##Plot upset results for JA
+upset(fromList(JA_16TFs))
+
+
+###SA - formlist function
+SA_15TFs <- list(TGA5_SA= TGA5_SA$TGA5_SA,
+                 EDF1_AIR=EDF1_AIR$EDF1_AIR,
+                 EDF3_AIR=EDF3_AIR$EDF3_AIR,
+                 EIN3_AIR=EIN3_AIR$EIN3_AIR,
+                 STZ_AIR=STZ_AIR$STZ_AIR,
+                 BES1_AIR=BES1_AIR$BES1_AIR,
+                 EDF2_AIR=EDF2_AIR$EDF2_AIR,
+                 ABF3_AIR=ABF3_AIR$ABF3_AIR,
+                 ABF4_AIR=ABF4_AIR$ABF4_AIR,
+                 RAP26L_2AIR_unique=RAP26L_2AIR_unique$RAP26L_AIR,
+                 MYC3_AIR_2AIR_unique=MYC3_AIR_2AIR_unique$MYC3_AIR,
+                 MYC2_2AIR_unique=MYC2_2AIR_unique$MYC2_AIR,
+                 OBP2_2AIR_unique=OBP2_2AIR_unique$OBP2_AIR,
+                 TCP3_2AIR_unique=TCP3_2AIR_unique$TCP3_AIR,
+                 ANAC055_2AIR_unique=ANAC055_2AIR_unique$ANAC055_AIR)
+##Plot upset results for SA
+upset(fromList(SA_15TFs))
+
+###BR - formlist function
+BR_15TFs <- list(BES1_BR= BES1_BR$BES1_BR,
+                 TCP3_BR= TCP3_BR$TCP3_BR,
+                 EDF1_AIR=EDF1_AIR$EDF1_AIR,
+                 EDF3_AIR=EDF3_AIR$EDF3_AIR,
+                 EIN3_AIR=EIN3_AIR$EIN3_AIR,
+                 STZ_AIR=STZ_AIR$STZ_AIR,
+                 TGA5_AIR=TGA5_AIR$TGA5_AIR,
+                 EDF2_AIR=EDF2_AIR$EDF2_AIR,
+                 ABF3_AIR=ABF3_AIR$ABF3_AIR,
+                 ABF4_AIR=ABF4_AIR$ABF4_AIR,
+                 RAP26L_2AIR_unique=RAP26L_2AIR_unique$RAP26L_AIR,
+                 MYC3_AIR_2AIR_unique=MYC3_AIR_2AIR_unique$MYC3_AIR,
+                 MYC2_2AIR_unique=MYC2_2AIR_unique$MYC2_AIR,
+                 OBP2_2AIR_unique=OBP2_2AIR_unique$OBP2_AIR,
+                 ANAC055_2AIR_unique=ANAC055_2AIR_unique$ANAC055_AIR)
+##Plot upset results for BR
+upset(fromList(BR_15TFs))
+
+
+###SL - formlist function
+SL_15TFs <- list(EDF1_AIR=EDF1_AIR$EDF1_AIR,
+                 EDF3_AIR=EDF3_AIR$EDF3_AIR,
+                 EIN3_AIR=EIN3_AIR$EIN3_AIR,
+                 STZ_AIR=STZ_AIR$STZ_AIR,
+                 TGA5_AIR=TGA5_AIR$TGA5_AIR,
+                 BES1_AIR=BES1_AIR$BES1_AIR,
+                 EDF2_AIR=EDF2_AIR$EDF2_AIR,
+                 ABF3_AIR=ABF3_AIR$ABF3_AIR,
+                 ABF4_AIR=ABF4_AIR$ABF4_AIR,
+                 RAP26L_2AIR_unique=RAP26L_2AIR_unique$RAP26L_AIR,
+                 MYC3_AIR_2AIR_unique=MYC3_AIR_2AIR_unique$MYC3_AIR,
+                 MYC2_2AIR_unique=MYC2_2AIR_unique$MYC2_AIR,
+                 OBP2_2AIR_unique=OBP2_2AIR_unique$OBP2_AIR,
+                 TCP3_2AIR_unique=TCP3_2AIR_unique$TCP3_AIR,
+                 ANAC055_2AIR_unique=ANAC055_2AIR_unique$ANAC055_AIR)
+##Plot upset results for SL
+upset(fromList(SL_15TFs))
+
+
+###ABA - formlist function
+ABA_16TFs <- list(ABF1_ABA=ABF1_ABA$ABF1_ABA,
+                  ABF3_ABA=ABF3_ABA$ABF3_ABA,
+                  ABF4_ABA=ABF4_ABA$ABF4_ABA,
+                  EDF1_AIR=EDF1_AIR$EDF1_AIR,
+                  EDF3_AIR=EDF3_AIR$EDF3_AIR,
+                  EIN3_AIR=EIN3_AIR$EIN3_AIR,
+                  STZ_AIR=STZ_AIR$STZ_AIR,
+                  TGA5_AIR=TGA5_AIR$TGA5_AIR,
+                  BES1_AIR=BES1_AIR$BES1_AIR,
+                  EDF2_AIR=EDF2_AIR$EDF2_AIR,
+                  RAP26L_2AIR_unique=RAP26L_2AIR_unique$RAP26L_AIR,
+                  MYC3_AIR_2AIR_unique=MYC3_AIR_2AIR_unique$MYC3_AIR,
+                  MYC2_2AIR_unique=MYC2_2AIR_unique$MYC2_AIR,
+                  OBP2_2AIR_unique=OBP2_2AIR_unique$OBP2_AIR,
+                  TCP3_2AIR_unique=TCP3_2AIR_unique$TCP3_AIR,
+                  ANAC055_2AIR_unique=ANAC055_2AIR_unique$ANAC055_AIR)
+##Plot upset results for ABA
+upset(fromList(ABA_16TFs))
+
+
+###ET - formlist function
+ET_15TFs <- list(RAP26L_ET= RAP26L_ET$RAP26L_ET,
+                 MYC3_ET=MYC3_ET$MYC3_ET,
+                 EDF1_ET=EDF1_ET$EDF1_ET,
+                 EDF3_ET=EDF3_ET$EDF3_ET,
+                 EDF3_ET=EIN3_ET$EIN3_ET,
+                 OBP2_ET$OBP2_ET,
+                 MYC2_ET=MYC2_ET$MYC2_ET,
+                 STZ_ET=STZ_ET$STZ_ET,
+                 TGA5_ET=TGA5_ET$TGA5_ET,
+                 TCP3_ET=TCP3_ET$TCP3_ET,
+                 BES1_ET=BES1_ET$BES1_ET,
+                 ANAC055_ET=ANAC055_ET$ANAC055_ET,
+                 EDF2_ET=EDF2_ET$EDF2_ET,
+                 ABF3_AIR=ABF3_AIR$ABF3_AIR,
+                 ABF4_AIR=ABF4_AIR$ABF4_AIR)
+##Plot upset results for ET
+upset(fromList(ET_15TFs),order.by = "freq")
+
+
+
+
+
+### Now add a column for ecah datafram
+TF_files <- ls()[!str_detect(ls(),"TF")]
+
+add_id <- function(df) {
+  df$id <- df[[1]]
+  return(df)
+}
+
+for( TF in TF_files) {
+  TF_df <- get(TF)
+  assign(paste0(TF,'_id'), add_id(TF_df))
+}
+
+rm(TF, TF_df)
+rm(list = TF_files)
+
+
+### creat a function to calculate the intersections
+interaction_calculator <- function(TF_names) {
+  TF_names_id <- paste0(TF_names, '_id')
+  JA_files_list <- list()
+  for(i in 1:length(TF_names)) {
+    TF_file <- TF_names[i]
+    JA_files_list[[TF_file]] <- get(TF_names_id[i])
+  }
+  
+  all_JA_TF_files <- reduce(JA_files_list, full_join, by='id') 
+  all_JA_TF_files <- all_JA_TF_files[,c(2,1,3:ncol(all_JA_TF_files))]
+  all_JA_TF_files[2:ncol(all_JA_TF_files)] <- ifelse(is.na(all_JA_TF_files[2:ncol(all_JA_TF_files)]), 0, 1)
+  all_JA_TF_files$intersect_sum <- rowSums(all_JA_TF_files[2:ncol(all_JA_TF_files)])
+  return(all_JA_TF_files)
+}
+
+
+####Prepare for JA Results
+JA_TFs <- c('MYC3_JA','MYC2_JA','TCP3_JA','OBP2_JA',
+            'RAP26L_JA','STZ_JA','ANAC055_JA',
+            'ERF1_JA','EDF2_JA','EIN3_JA',
+            'EDF1_AIR','EDF3_AIR','TGA5_AIR',
+            'BES1_AIR','ABF3_AIR','ABF4_AIR')
+JA_intersection <- interaction_calculator(JA_TFs)
+JA_intersection$group <-  ifelse( 1 <= JA_intersection$intersect_sum & JA_intersection$intersect_sum <= 3, 'low',
+                                  ifelse(3 < JA_intersection$intersect_sum & JA_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(JA_intersection, 'JA_intersection.csv')
+
+
+
+####Prepare for SA Results
+SA_TF <- c('TGA5_SA','EDF1_AIR','EDF3_AIR','EIN3_AIR','STZ_AIR','BES1_AIR','EDF2_AIR','ABF3_AIR','ABF4_AIR','RAP26L_2AIR_unique','MYC3_AIR_2AIR_unique','MYC2_2AIR_unique','OBP2_2AIR_unique','TCP3_2AIR_unique','ANAC055_2AIR_unique')
+
+
+SA_intersection <- interaction_calculator(SA_TF)
+SA_intersection$group <-  ifelse( 1 <= SA_intersection$intersect_sum & SA_intersection$intersect_sum <= 3, 'low',
+                                 ifelse(3 < SA_intersection$intersect_sum & SA_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(SA_intersection, 'SA_intersection.csv')
+
+
+########Prepare for BR Results
+BR_TF <-c('BES1_BR','TCP3_BR','EDF1_AIR','EDF3_AIR','EIN3_AIR','STZ_AIR','TGA5_AIR','EDF2_AIR','ABF3_AIR','ABF4_AIR',
+          'RAP26L_2AIR_unique','MYC3_AIR_2AIR_unique','MYC2_2AIR_unique','OBP2_2AIR_unique','ANAC055_2AIR_unique')
+BR_intersection <- interaction_calculator(BR_TF)
+BR_intersection$group <-  ifelse( 1 <= BR_intersection$intersect_sum & BR_intersection$intersect_sum <= 3, 'low',
+                                  ifelse(3 < BR_intersection$intersect_sum & BR_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(BR_intersection, 'BR_intersection.csv')
+
+
+
+
+########Prepare for SL Results
+SL_TF <- c('EDF1_AIR','EDF3_AIR','EIN3_AIR','STZ_AIR','TGA5_AIR','BES1_AIR','EDF2_AIR','ABF3_AIR','ABF4_AIR','RAP26L_2AIR_unique',
+           'MYC3_AIR_2AIR_unique','MYC2_2AIR_unique','OBP2_2AIR_unique','TCP3_2AIR_unique','ANAC055_2AIR_unique')
+
+SL_intersection <- interaction_calculator(SL_TF)
+SL_intersection$group <-  ifelse( 1 <= SL_intersection$intersect_sum & SL_intersection$intersect_sum <= 3, 'low',
+                                  ifelse(3 < SL_intersection$intersect_sum & SL_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(SL_intersection, 'SL_intersection.csv')
+
+
+
+
+########Prepare for ABA Results
+ABA_TF <- c('ABF1_ABA','ABF3_ABA','ABF4_ABA','EDF1_AIR','EDF3_AIR','EIN3_AIR','STZ_AIR','TGA5_AIR','BES1_AIR','EDF2_AIR',
+'RAP26L_2AIR_unique','MYC3_AIR_2AIR_unique','OBP2_2AIR_unique','MYC2_2AIR_unique','TCP3_2AIR_unique','ANAC055_2AIR_unique')
+ABA_intersection <- interaction_calculator(ABA_TF)
+ABA_intersection$group <-  ifelse( 1 <= ABA_intersection$intersect_sum & ABA_intersection$intersect_sum <= 3, 'low',
+                                  ifelse(3 < ABA_intersection$intersect_sum & ABA_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(ABA_intersection, 'ABA_intersection.csv')
+
+
+
+
+########Prepare for ET Results
+ET_TF <- c('RAP26L_ET','MYC3_ET','EDF1_ET','EDF3_ET','EIN3_ET','EDF3_ET','OBP2_ET','MYC2_ET','STZ_ET','TGA5_ET','TCP3_ET','BES1_ET','ANAC055_ET','EDF2_ET','ABF3_AIR','ABF4_AIR')
+ET_intersection <- interaction_calculator(ET_TF)
+ET_intersection$group <-  ifelse( 1 <= ET_intersection$intersect_sum & ET_intersection$intersect_sum <= 3, 'low',
+                                   ifelse(3 < ET_intersection$intersect_sum & ET_intersection$intersect_sum <= 6, 'mediate','high'))
+write_csv(ET_intersection, 'ET_intersection.csv')
+
+
+library(ggplot2)
+
+###JA DATA
+##Read in the group and log2fc information
+JA_group <- read.csv('./01JA/JA_intersection_3groups.csv')
+JA_2h_log2fc <-read.csv('./01JA/JA_2hour_Log2FC.csv')
+###Merge 
+JA_HotGene <-merge(JA_group, JA_2h_log2fc)
+###Plot the density figure
+JA_HotGene$group <- factor(JA_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(JA_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(JA_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(JA_HotGene[JA_HotGene$group=='high',]$Log2FC, JA_HotGene[JA_HotGene$group=='low',]$Log2FC )
+t.test(JA_HotGene[JA_HotGene$group=='high',]$Log2FC, JA_HotGene[JA_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+###SA DATA
+##Read in the group and log2fc information
+SA_group <- read.csv('./02SA/SA_intersection_3groups.csv')
+SA_2h_log2fc <-read.csv('./02SA/SA_2hour_Log2FC.csv')
+###Merge 
+SA_HotGene <-merge(SA_group, SA_2h_log2fc)
+###Plot the density figure
+SA_HotGene$group <- factor(SA_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(SA_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(SA_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(SA_HotGene[SA_HotGene$group=='high',]$Log2FC, SA_HotGene[SA_HotGene$group=='low',]$Log2FC )
+t.test(SA_HotGene[SA_HotGene$group=='high',]$Log2FC, SA_HotGene[SA_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+###BR DATA
+##Read in the group and log2fc information
+BR_group <- read.csv('./03BR/BR_intersection_3groups.csv')
+BR_2h_log2fc <-read.csv('./03BR/BR_2hour_Log2FC.csv')
+###Merge 
+BR_HotGene <-merge(BR_group, BR_2h_log2fc)
+###Plot the density figure
+BR_HotGene$group <- factor(BR_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(BR_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(BR_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(BR_HotGene[BR_HotGene$group=='high',]$Log2FC, BR_HotGene[BR_HotGene$group=='low',]$Log2FC )
+t.test(BR_HotGene[BR_HotGene$group=='high',]$Log2FC, BR_HotGene[BR_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+###SL DATA
+##Read in the group and log2fc information
+SL_group <- read.csv('./04SL/SL_intersection_3groups.csv')
+SL_2h_log2fc <-read.csv('./04SL/SL_2hour_Log2FC.csv')
+###Merge 
+SL_HotGene <-merge(SL_group, SL_2h_log2fc)
+###Plot the density figure
+SL_HotGene$group <- factor(SL_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(SL_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(SL_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(SL_HotGene[SL_HotGene$group=='high',]$Log2FC, SL_HotGene[SL_HotGene$group=='low',]$Log2FC )
+t.test(SL_HotGene[SL_HotGene$group=='high',]$Log2FC, SL_HotGene[SL_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+
+###ABA DATA
+##Read in the group and log2fc information
+ABA_group <- read.csv('./05ABA/ABA_intersection_3groups.csv')
+ABA_4h_log2fc <-read.csv('./05ABA/ABA_4hour_Log2FC.csv')
+###Merge 
+ABA_HotGene <-merge(ABA_group, ABA_4h_log2fc)
+###Plot the density figure
+ABA_HotGene$group <- factor(ABA_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(ABA_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(ABA_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(ABA_HotGene[ABA_HotGene$group=='high',]$Log2FC, ABA_HotGene[ABA_HotGene$group=='low',]$Log2FC )
+t.test(ABA_HotGene[ABA_HotGene$group=='high',]$Log2FC, ABA_HotGene[ABA_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+###ET DATA
+##Read in the group and log2fc information
+ET_group <- read.csv('./06ET/ET_intersection_3groups.csv')
+ET_4h_log2fc <-read.csv('./06ET/ET_4hour_Log2FC.csv')
+###Merge 
+ET_HotGene <-merge(ET_group, ET_4h_log2fc)
+###Plot the density figure
+ET_HotGene$group <- factor(ET_HotGene$group, levels = c('high', 'mediate', 'low'))
+ggplot(ET_HotGene, aes(x= Log2FC, fill= group)) +
+  geom_density(alpha=0.5)+
+  scale_x_continuous(limits = c(-3,3))
+###plot box plots
+ggplot(ET_HotGene,aes(x= group, y=Log2FC, fill= group))+
+  geom_boxplot()
+###t-test
+t.test(ET_HotGene[ET_HotGene$group=='high',]$Log2FC, ET_HotGene[ET_HotGene$group=='low',]$Log2FC )
+t.test(ET_HotGene[ET_HotGene$group=='high',]$Log2FC, ET_HotGene[ET_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+
+
+### KS-test
+ks.test(JA_HotGene[JA_HotGene$group=='high',]$Log2FC, JA_HotGene[JA_HotGene$group=='low',]$Log2FC )
+ks.test(JA_HotGene[JA_HotGene$group=='high',]$Log2FC, JA_HotGene[JA_HotGene$group=='mediate',]$Log2FC )
+
+ks.test(SA_HotGene[SA_HotGene$group=='high',]$Log2FC, SA_HotGene[SA_HotGene$group=='low',]$Log2FC )
+ks.test(SA_HotGene[SA_HotGene$group=='high',]$Log2FC, SA_HotGene[SA_HotGene$group=='mediate',]$Log2FC )
+
+ks.test(BR_HotGene[BR_HotGene$group=='high',]$Log2FC, BR_HotGene[BR_HotGene$group=='low',]$Log2FC )
+ks.test(BR_HotGene[BR_HotGene$group=='high',]$Log2FC, BR_HotGene[BR_HotGene$group=='mediate',]$Log2FC )
+
+
+ks.test(SL_HotGene[SL_HotGene$group=='high',]$Log2FC, SL_HotGene[SL_HotGene$group=='low',]$Log2FC )
+ks.test(SL_HotGene[SL_HotGene$group=='high',]$Log2FC, SL_HotGene[SL_HotGene$group=='mediate',]$Log2FC )
+
+ks.test(ABA_HotGene[ABA_HotGene$group=='high',]$Log2FC, ABA_HotGene[ABA_HotGene$group=='low',]$Log2FC )
+ks.test(ABA_HotGene[ABA_HotGene$group=='high',]$Log2FC, ABA_HotGene[ABA_HotGene$group=='mediate',]$Log2FC )
+
+ks.test(ET_HotGene[ET_HotGene$group=='high',]$Log2FC, ET_HotGene[ET_HotGene$group=='low',]$Log2FC )
+ks.test(ET_HotGene[ET_HotGene$group=='high',]$Log2FC, ET_HotGene[ET_HotGene$group=='mediate',]$Log2FC )
+
+
+
+
+### write out the the log2fc values for target genes in each groups.
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_Hot gene_targets prepare/2_Apply_Log2FC/00_density_plot")
+write.csv(ABA_HotGene, file = './ABA_log2fc.csv')
+write.csv(BR_HotGene, file = './BR_log2fc.csv')
+write.csv(ET_HotGene, file = './ET_log2fc.csv')
+write.csv(JA_HotGene, file = './JA_log2fc.csv')
+write.csv(SA_HotGene, file = './SA_log2fc.csv')
+write.csv(SL_HotGene, file = './SL_KAR_log2fc.csv')
+
+
+library(clusterProfiler)
+library(org.At.tair.db)
+library(DOSE)
+library(ggplot2)
+
+
+##Read in SHARED HOTGENE ID
+Shared_list <-read.csv('./combined_hotgene_1103ID.csv', stringsAsFactors = F,header = F)
+###check duplication
+Shared_list<- unique(Shared_list)
+
+##Clusterprofiler--GO enrichment analysis
+shared_go <- enrichGO(Shared_list$V1, OrgDb= 'org.At.tair.db', keyType = 'TAIR', ont = 'ALL',pAdjustMethod = 'BH',pvalueCutoff = 0.05, qvalueCutoff = 0.2)
+##Clusterprofiler--Kegg enrichment analysis
+shared_kegg <- enrichKEGG(Shared_list$V1, organism = 'ath', pAdjustMethod = 'BH',pvalueCutoff = 0.05, qvalueCutoff = 0.2)
+
+##Visualization
+dotplot(shared_go)
+dotplot(shared_kegg)
+barplot(shared_go, showCategory=54)
+##cnetplot(shared_go, circular = TRUE, colorEdge = TRUE,categorySize="pvalue",foldChange = geneList)
+##heatplot(shared_go)
+##use the default value n=50 to only show 50 highly significant terms.
+emapplot(shared_go)
+ggsave('emap.pdf')
+
+
+###write out the results
+write.csv(shared_go@result, file = './combinedhotgene_go_result.csv',quote = F)
+
+
+
+
+####Read in filtered results
+filtered_list <-read.csv('./Hotgene_hormone_goterms.csv', header=TRUE,row.names=1,check.names = FALSE)
+
+###Final one 
+##plot x and y axis
+#adjust color gradient
+library(RColorBrewer)
+library(scales)
+
+filtered_list$`-log10p` <- -log10(filtered_list$p.adjust)
+
+ggplot(filtered_list,aes(p.adjust,Pathway, size=Count, col=`-log10p`))+
+  geom_point()+
+  scale_color_gradientn(colors = c('lightgrey','lightgrey','red','darkred'), values = rescale(c(0,1.9,1.999,max(filtered_list$`-log10p`))),breaks=seq(0,21,4), limits=c(0,max(filtered_list$`-log10p`)))+
+  theme(legend.text = element_text(size = 10))
+
+##save
+ggsave("out.pdf")
+
+
+
+
+
+
+
+
+
+
+
+
