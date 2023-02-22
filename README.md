@@ -44,7 +44,18 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 3. Proteomics and Phosphoproteomics data: The mass spectrometry proteomics data (raw and search files) have been deposited to the ProteomeXchange Consortium via the PRIDE partner repository with the dataset identifier: PXD039958
 
 ### Methods
-1. The summary of all analysis processes can be found in workflow_Hormone_network.pdf
+The summary of experimental design and analysis pipeline can be found in workflow_Hormone_network.pdf
+
+#### RNA-seq data analysis
+1.check quality and perform trimming of raw data
+```
+#produce quality control report and trim the raw reads via trimgalore!
+module load fastqc/0.11.5
+module load trimgalore/0.4.4
+echo "Starting at: $(date)"
+trim_galore --phred33 --gzip --fastqc *.fastq.gz
+echo "Finished at: $(date)"
+```
 
 ### Original code
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
