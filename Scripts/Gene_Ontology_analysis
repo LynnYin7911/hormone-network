@@ -54,6 +54,7 @@ combined_backgroundgene <- unique(combined_backgroundgene)
 combined_predictednodes<- list(ABA=aba_list$V1,BR=br_list$V1,ET=eth_list$V1,JA=ja_list$V1,SA=sa_list$V1,SL_KAR=sl_list$V1)
 lapply(combined_predictednodes,head)
 
+##enrichGO function via clusterProfiler
 ck <- compareCluster(geneCluster = combined_predictednodes, fun = "enrichGO", universe = combined_backgroundgene$V1,OrgDb= 'org.At.tair.db', keyType =  'TAIR', ont = 'BP',pAdjustMethod = 'BH',pvalueCutoff = 0.05, qvalueCutoff = 0.2)
 head(as.data.frame(ck))
 dotplot(ck,showCategory=5,includeAll=FALSE)
