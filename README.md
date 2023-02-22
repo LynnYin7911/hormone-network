@@ -20,7 +20,7 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 2. Hormone-responsive ChIP-seq data and validation RNA-seq data: All the raw data (clean data) and processed data (count/TPM matrix.csv for RNA-seq data; .narrowPeak for ChIP-seq data) have been uploaded to GEO with accession number: GSE220957
 3. Proteomics and Phosphoproteomics data: The mass spectrometry proteomics data (raw and search files) have been deposited to the ProteomeXchange Consortium via the PRIDE partner repository with the dataset identifier: PXD039958
 - Main analysis pipeline
-1. The summary of all analysis processes can be found in workflow_Hormone_network.pptx
+1. The summary of all analysis processes can be found in workflow_Hormone_network.pdf
 - Original code
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
 2. Peak annotations via ChIPpeakAnno
