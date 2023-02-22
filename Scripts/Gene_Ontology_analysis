@@ -4,6 +4,7 @@ This script is written for performing GO enrichment analysis for intersted gene 
 library(clusterProfiler)
 library(org.At.tair.db)
 library(tidyverse)
+library(ggplot2)
 
 #set work directory
 setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_SDREM_newPPI")
@@ -12,45 +13,38 @@ setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_SDREM_newPPI")
 ##Read in Background_gene_set
 JA_Background_gene <- read.csv('./01JA/3_JA_Enrichment/JA10_backgroundgene.csv',stringsAsFactors = F,header = F)
 JA_Background_gene <- unique(JA_Background_gene)
-
 SA_Background_gene <- read.csv('./02SA/3_SA_Enrichment/SA10_backgroundGene.csv',stringsAsFactors = F,header = F)
 SA_Background_gene <- unique(SA_Background_gene)
-
 BR_Background_gene <- read.csv('./03BR10/3_BR_Enrichment/BR10_Backgroundgene.csv',stringsAsFactors = F,header = F)
 BR_Background_gene <- unique(BR_Background_gene)
-
 SL_Background_gene <- read.csv('./04SL/3_SL_Enrichment/SL10_Backgroundgene.csv',stringsAsFactors = F,header = F)
 SL_Background_gene <- unique(SL_Background_gene)
-
 ABA_Background_gene <- read.csv('./05ABA10/3_ABA_Enrichment/ABA10_Backgroundgene.csv',stringsAsFactors = F,header = F)
 ABA_Background_gene <- unique(ABA_Background_gene)
-
 ET_Background_gene <- read.csv('./06ET/3_ET_Enrichment/ET12_Backgroundgene.csv',stringsAsFactors = F,header = F)
 ET_Background_gene <- unique(ET_Background_gene)
 
 ##Read in GENE_ID_LIST
 ja_list <-read.csv('./01JA/3_JA_Enrichment/JA10_85PredictedTF_Internal_enrichment.csv', stringsAsFactors = F,header = F)
 ja_list <- unique(ja_list)
-
 sa_list <-read.csv('./02SA/3_SA_Enrichment/SA10_82PredictedTF_internal_enrichment.csv', stringsAsFactors = F,header = F)
 sa_list <- unique(sa_list)
-
 br_list <-read.csv('./03BR10/3_BR_Enrichment/BR10_88PredictedTF_Internal_enrichment.csv', stringsAsFactors = F,header = F)
 br_list <- unique(br_list)
-
 sl_list <-read.csv('./04SL/3_SL_Enrichment/SL10_90PredictedTF_Internals_enrichment.csv', stringsAsFactors = F,header = F)
 sl_list <- unique(sl_list)
-
 aba_list <-read.csv('./05ABA10/3_ABA_Enrichment/ABA10_77Predicted_Internal_enrichment.csv', stringsAsFactors = F,header = F)
 aba_list <- unique(aba_list)
-
 eth_list <-read.csv('./06ET/3_ET_Enrichment/ET12_64PredictedTF_Internal_enrichment.csv', stringsAsFactors = F,header = F)
 eth_list <- unique(eth_list)
 
 ##compare GO-BP enrichment results
+
+###prepare the backgrounds
 combined_backgroundgene <- rbind(JA_Background_gene,SA_Background_gene,BR_Background_gene,SL_Background_gene,ABA_Background_gene,ET_Background_gene)
 combined_backgroundgene <- unique(combined_backgroundgene)
 
+###combine the hormones gene list into one
 combined_predictednodes<- list(ABA=aba_list$V1,BR=br_list$V1,ET=eth_list$V1,JA=ja_list$V1,SA=sa_list$V1,SL_KAR=sl_list$V1)
 lapply(combined_predictednodes,head)
 
