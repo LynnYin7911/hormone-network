@@ -6,6 +6,7 @@ library("TxDb.Athaliana.BioMart.plantsmart28")
 library("biomaRt")
 
 #Set work directory
+setwd("~/OneDrive - LA TROBE UNIVERSITY/Cherishyita/00_AgriBio_labwork/03-ChIPSeq_Hormone_data/03_ABA-ChIP_Results/00_ABFs_denova_Anno/1_bed")
 
 #Annotate the peaks via ChIPpeakAnno
 ##Prepare annotation data with toGRanges
@@ -13,7 +14,7 @@ annoData <- toGRanges(TxDb.Athaliana.BioMart.plantsmart28, feature="gene")
 annoData
 
 ##Convert the peak data to GRanges with toGRanges
-ABF1_ABA <- toGRanges('./ABF1_ABA_optimal_narrowPeak_p16.bed', format = 'BED', header = F)
+ABF1_ABA <- toGRanges('./50cut_ABF1_aba_fv.bed', format = 'BED', header = F)
 
 ##Keep the seqnames in the same style
 seqlevelsStyle(annoData) <- seqlevelsStyle(ABF1_ABA)
