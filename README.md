@@ -69,7 +69,6 @@ samtools sort -n /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.
 done
 echo "Finished at: $(date)"
 
-```
 module load salmon-gcc/0.8.1
 echo "Starting at: $(date)"
   for i in `cat /data/group/lewseylab/project/lynn/14_SA_AS_data/00_TPM_Quantification/sample_list.txt`
@@ -83,6 +82,7 @@ salmon quant -i /data/group/lewseylab/project/lynn/13_JA_AS_data/new_transcripto
 done
 echo "Finished at: $(date)"
 ```
+
 3.Count (this step has been done for all hormone datasets but only kept for ET dataset at the end, see workflow_hormone_network.pdf for details)
 ```
 module load htseq/0.8.0
@@ -93,6 +93,7 @@ htseq-count -s no -r name -f bam /data/group/lewseylab/project/lynn/04sa_februar
 done
 echo "Finished at: $(date)"
 ```
+
 ### Original code
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
 2. Peak annotations via ChIPpeakAnno
