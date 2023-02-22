@@ -43,7 +43,7 @@ List of tools used: FastQC V0.11.5, Trimglore V0.4.4, Bowtie2 V2.2.9, samtools V
 2. Hormone-responsive ChIP-seq data and validation RNA-seq data: All the raw data (clean data) and processed data (count/TPM matrix.csv for RNA-seq data; .narrowPeak for ChIP-seq data) have been uploaded to GEO with accession number: GSE220957
 3. Proteomics and Phosphoproteomics data: The mass spectrometry proteomics data (raw and search files) have been deposited to the ProteomeXchange Consortium via the PRIDE partner repository with the dataset identifier: PXD039958
 
-### Methods
+### Methods - take SA data for example
 The summary of experimental design and analysis pipeline can be found in workflow_Hormone_network.pdf
 
 #### RNA-seq data analysis
@@ -56,7 +56,43 @@ echo "Starting at: $(date)"
 trim_galore --phred33 --gzip --fastqc *.fastq.gz
 echo "Finished at: $(date)"
 ```
+2.mapping (generate sorted.bam)/quasi-mapping
+```
+module load hisat-gcc/2.0.5
+module load samtools-gcc/1.3.1
+echo "Starting at: $(date)"
+for i in `cat /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/sample_list.txt`
+do
+hisat2 -x /data/group/lewseylab/project/lynn/reference_index/Ara_index -U /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/${i}_trimmed.fq.gz -S /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.sam
+samtools view -S /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.sam -b > /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.bam
+samtools sort -n /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.bam -o /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}_sorted.bam
+done
+echo "Finished at: $(date)"
 
+```
+module load salmon-gcc/0.8.1
+echo "Starting at: $(date)"
+  for i in `cat /data/group/lewseylab/project/lynn/14_SA_AS_data/00_TPM_Quantification/sample_list.txt`
+do
+echo "processing sample ${i}"
+salmon quant -i /data/group/lewseylab/project/lynn/13_JA_AS_data/new_transcriptome_Arabidopsis/AtRTDv2_QUASI_index  -l A \
+-r /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/${i}_trimmed.fq.gz \
+-p 8 \
+--gcBias \
+-o /data/group/lewseylab/project/lynn/14_SA_AS_data/00_TPM_Quantification/${i}_quant
+done
+echo "Finished at: $(date)"
+```
+3.Count (this step has been done for all hormone datasets but only kept for ET dataset at the end, see workflow_hormone_network.pdf for details)
+```
+module load htseq/0.8.0
+echo "Starting at: $(date)"
+for i in `cat /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/sample_list.txt`
+do
+htseq-count -s no -r name -f bam /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}_sorted.bam /data/group/lewseylab/project/lynn/00germ_may17/Annotations/Araport11_GFF3_genes_transposons.201606.gtf > /data/group/lewseylab/project/lynn/04sa_february1/04htseq/${i}.count
+done
+echo "Finished at: $(date)"
+```
 ### Original code
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
 2. Peak annotations via ChIPpeakAnno
