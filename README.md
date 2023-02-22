@@ -97,7 +97,17 @@ echo "Finished at: $(date)"
 #### ChIP-seq data analysis
 1.check quality and perform trimming of raw data
 ```
-same as RNA-seq analysis
+#fastqc same as RNA-seq analysis
+#check the cross-
+module load samtools-gcc/1.3.1
+module load R-gcc7/3.6.0
+module load phantompeakqualtools/1.1
+echo "Starting at: $(date)"
+for i in `cat ./sample_list1.txt`
+do
+Rscript data/group/lewseylab/project/lynn/13_JA_AS_data/00JA_paper_review/01_histone_frip/phantompeakqualtools/run_spp.R -rf -c=/data/group/lewseylab/project/lynn/12_own_ChIPdata/01_ETH_treatment/01_rap2.6l/${i}.confident.bam  -savp=/data/group/lewseylab/project/lynn/12_own_ChIPdata/01_ETH_treatment/01_rap2.6l/02phantom/${i}.plot.pdf  -out=/data/group/lewseylab/project/lynn/12_own_ChIPdata/01_ETH_treatment/01_rap2.6l/02phantom/${i}.score.txt
+done
+echo "Finished at: $(date)"
 ```
 
 2.mapping via bowtie2
