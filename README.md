@@ -98,7 +98,8 @@ echo "Finished at: $(date)"
 1.check quality and perform trimming of raw data
 ```
 #fastqc same as RNA-seq analysis
-#check the cross-
+
+#quality measures for ChIP-seq via phantompeakqualtools
 module load samtools-gcc/1.3.1
 module load R-gcc7/3.6.0
 module load phantompeakqualtools/1.1
@@ -138,6 +139,7 @@ for i in `cat ./sample_list.txt`
 do
    awk -F "\t" '{if( $9 >= 15) print $0}' ../${i}_peaks.narrowPeak > ./cut_${i}_peaks.narrowPeak
 done
+
 #merge biological replicates
 module load  bedtools-gcc/2.26.0
 echo "Starting at: $(date)"
