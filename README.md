@@ -94,9 +94,54 @@ done
 echo "Finished at: $(date)"
 ```
 
+#### ChIP-seq data analysis
+1.check quality and perform trimming of raw data
+```
+same as RNA-seq analysis
+```
+
+2.mapping via bowtie2
+```
+module load bowtie2-intel/2.2.9
+module load samtools-gcc/1.3.1
+echo "Starting at: $(date)"
+for i in `cat ./sample_list.txt`
+do
+   bowtie2 -p 8 -x /data/group/lewseylab/project/lynn/reference_index/Bowtie2_ChIp_Ara_index -U ./${i}_trimmed.fq.gz -S ${i}.sam
+   samtools view -S ${i}.sam -b > ${i}.bam
+   samtools sort ${i}.bam -o ${i}.sorted.bam
+   samtools view -b -q 10 ./${i}.sorted.bam > ./${i}.confident.bam
+   samtools index ./${i}.confident.bam
+   rm ./${i}.sam
+done
+echo "Finished at: $(date)"
+```
+3.peak calling
+```
+module load  macs/2.1.0.20150420
+macs2 callpeak -t ./rap2.6l_air_rep1.confident.bam -c ../00_mock/final_mock_air.confident.bam -f BAM -g 1.19e8 -n rap2.6l_air_rep1 -B --outdir ./01final_peaks -q 0.05
+```
+4.handle biological replicates
+```
+#Keep only confident peaks--log 10 (q value) >= 15 or q < 10-15
+for i in `cat ./sample_list.txt`
+do
+   awk -F "\t" '{if( $9 >= 15) print $0}' ../${i}_peaks.narrowPeak > ./cut_${i}_peaks.narrowPeak
+done
+#merge biological replicates
+module load  bedtools-gcc/2.26.0
+echo "Starting at: $(date)"
+ bedtools intersect -a ./cut_rap2.6l_air_rep1_peaks.narrowPeak -b ./cut_rap2.6l_air_rep3_peaks.narrowPeak -f 0.5 -r  > ../01overlap_peaks/50cut_13_airnr.bed
+ bedtools intersect -a ./cut_rap2.6l_air_rep1_peaks.narrowPeak -b ./cut_rap2.6l_air_rep4_peaks.narrowPeak -f 0.5 -r  > ../01overlap_peaks/50cut_14_airnr.bed
+ bedtools intersect -a ./cut_rap2.6l_air_rep3_peaks.narrowPeak -b ./cut_rap2.6l_air_rep4_peaks.narrowPeak -f 0.5 -r > ../01overlap_peaks/50cut_34_airnr.bed
+ cat ../01overlap_peaks/50cut_13_airnr.bed ../01overlap_peaks/50cut_14_airnr.bed ../01overlap_peaks/50cut_34_airnr.bed > ../01overlap_peaks/50cut_rap2.6l_airnr_fv.bed
+ bedtools intersect -a ./cut_rap2.6l_eth_rep1_peaks.narrowPeak -b ./cut_rap2.6l_eth_rep4_peaks.narrowPeak -f 0.5 -r  > ../01overlap_peaks/50cut_rap2.6l_ethnr_fv.bed
+echo "Finished at: $(date)"
+```
+
 ### Original code
 1. Differentially expressed genes (DEGs) analysis via edgeR (Scripts: edgeR)
-2. Peak annotations via ChIPpeakAnno
+2. Peak annotations via ChIPpeakAnno (Scripts: Peak_annotation)
 3. Input files for running SDREM (gene expression matrix; TF-target interactions; protein-protein interactions) preparation (Scripts: edgeR (in the last section prepare gene expression inputs for SDREM) & Prepare TF-genes inputs for SDREM & Prepare PPI inputs for SDREM)
 4. TF family distribution and enrichment analysis (Scripts: TF_family_enrichment)
 5. Hub target genes identification and expression distribution plot generation (Scripts: Hub_target_genes_identification)
