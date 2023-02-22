@@ -19,8 +19,10 @@ SL/KAR: /data/group/lewseylab/project/lynn/06col-0_sl_february2
 4. Time series ABA RNA-seq raw reads and ChIP-seq raw reads for ABF1, 3, 4 were downloaded from GEO with accession number GSE80568.
 5. Time series JA RNA-seq raw reads were downloaded from GEO with accession number GSE133408.
 6. Validation RNA-seq data was generated from wild type (Col-0) and mpk6 mutant seedlings treated with mock (water) / hormone (ABA, ET, JA, SA) for 1 h.
+```
 The raw data for wild type and mpk6 mutant seedlings can be found here:
 /data/group/lewseylab/project/lynn/21_mpk6_RNAseq_data
+```
 7. Validation proteomics and Phosphoproteomics data was generated from the same samples harvested for generating validation RNA-seq data.
 ```
 The raw data of proteome can be found here:
