@@ -1,0 +1,62 @@
+#Load required packages
+library("ChIPpeakAnno")
+library("GenomicRanges")
+library("org.At.tair.db")
+library("TxDb.Athaliana.BioMart.plantsmart28")
+library("biomaRt")
+
+#
+annoData <- toGRanges(TxDb.Athaliana.BioMart.plantsmart28, feature="gene")
+#
+gr <- toGRanges('Right_NFYB2_rep2_summits.bed', format = 'BED', header = F)
+#
+seqlevelsStyle(annoData) <- seqlevelsStyle(gr)
+annot <- annotatePeakInBatch(gr, 
+                               AnnotationData=annoData, 
+                               featureType = "TSS",
+                               output="nearestLocation",
+                               PeakLocForDistance = "start")
+
+ensembl <- useMart(biomart = "plants_mart",
+                     dataset = "athaliana_eg_gene",
+                     host = "plants.ensembl.org")
+
+annot <- addGeneIDs(annot, mart = ensembl, feature_id_type = "ensembl_gene_id",
+                      IDs2Add = c("entrezgene", "tair_symbol", "description"))
+#Vi
+pie1(table(annot$insideFeature))
+
+#
+write.table(annot, file = 'annotated.csv', sep = ",", col.names = T, 
+              row.names = F, quote = F)
+#
+seqlevelsStyle(TxDb.Athaliana.BioMart.plantsmart28) <- seqlevelsStyle(gr)
+
+aCR<-assignChromosomeRegion(gr, nucleotideLevel=FALSE, 
+                           precedence=c("Promoters", "immediateDownstream", 
+                                         "fiveUTRs", "threeUTRs", 
+                                         "Exons", "Introns"), 
+                           TxDb=TxDb.Athaliana.BioMart.plantsmart28)
+barplot(aCR$percentage)
+
+
+##Prepare annotation data with toGRanges
+annoData <- toGRanges(TxDb.Athaliana.BioMart.plantsmart28, feature="gene")
+annoData
+
+##Convert the peak data to GRanges with toGRanges
+ABF1_ABA <- toGRanges('./ABF1_ABA_optimal_narrowPeak_p16.bed', format = 'BED', header = F)
+
+###Keep the seqnames in the same style
+seqlevelsStyle(annoData) <- seqlevelsStyle(ABF1_ABA)
+annoData
+
+##Annotate the peaks with annotatePeakInBatch---Do annotation by nearest TSS
+ABF1_ABA_annot <- annotatePeakInBatch(ABF1_ABA, AnnotationData=annoData, featureType = "TSS",output="nearestLocation", PeakLocForDistance = "start")
+
+##Write out the annotation results
+setwd("~/00_AgriBio_labwork/03-ChIPSeq_Hormone_data/03_public-ChIP_Results/1_ABA_Treatment")
+write.table(ABF1_ABA_annot, file = './ABF1_ABA_annotated.csv', sep = ",", col.names = T, row.names = F, quote = F)
+
+##Pie chart to demonstrate the overlap features of the peaks
+pie(table(ZAT6_ABA_annot$insideFeature))
