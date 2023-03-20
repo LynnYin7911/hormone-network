@@ -63,7 +63,7 @@ module load samtools-gcc/1.3.1
 echo "Starting at: $(date)"
 for i in `cat /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/sample_list.txt`
 do
-hisat2 -x /data/group/lewseylab/project/lynn/reference_index/Ara_index -U /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/${i}_trimmed.fq.gz -S /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.sam
+hisat2 -x /data/group/lewseylab/project/lynn/reference_index/Ara_index -U /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/${i}_trimmed.fq.gz --rna-strandness R -S /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.sam
 samtools view -S /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.sam -b > /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.bam
 samtools sort -n /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}.bam -o /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}_sorted.bam
 done
