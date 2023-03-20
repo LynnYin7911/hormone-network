@@ -89,7 +89,7 @@ module load htseq/0.8.0
 echo "Starting at: $(date)"
 for i in `cat /data/group/lewseylab/project/lynn/04sa_february1/02cleandata/sample_list.txt`
 do
-htseq-count -s no -r name -f bam /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}_sorted.bam /data/group/lewseylab/project/lynn/00germ_may17/Annotations/Araport11_GFF3_genes_transposons.201606.gtf > /data/group/lewseylab/project/lynn/04sa_february1/04htseq/${i}.count
+htseq-count -r name -f bam /data/group/lewseylab/project/lynn/04sa_february1/03hisat/${i}_sorted.bam /data/group/lewseylab/project/lynn/00germ_may17/Annotations/Araport11_GFF3_genes_transposons.201606.gtf > /data/group/lewseylab/project/lynn/04sa_february1/04htseq/${i}.count
 done
 echo "Finished at: $(date)"
 ```
